@@ -1,0 +1,16 @@
+@import 'https://js.arcgis.com/4.31/@arcgis/core/assets/esri/themes/dark/main.css';
+@import './variables.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    background: var(--theme-background);
+    color: var(--theme-foreground);
+    overflow-y: auto;
+}
+
+#root .esri-view-root {
+    --esri-view-outline: 0;
+}
