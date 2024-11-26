@@ -30,6 +30,7 @@ import { batch } from 'react-redux';
 import { centerChanged, zoomChanged } from '@store/Map/reducer';
 
 import { Point } from '@arcgis/core/geometry';
+import SearchWidget from './SearchWidget';
 
 type Props = {
     /**
@@ -89,6 +90,28 @@ const MapViewContainer: FC<Props> = ({ mapOnClick, children }) => {
                     }}
                     mapViewUpdatingOnChange={(isUpdating) => {
                         console.log('map view is updating', isUpdating);
+                    }}
+                />
+
+                <SearchWidget
+                    searchCompletedHandler={(result) => {
+                        // // console.log(result)
+                        // const { feature } = result;
+                        // // console.log(feature)
+                        // if (!feature) {
+                        //     return;
+                        // }
+                        // const { latitude, longitude } =
+                        //     feature.geometry as Point;
+                        // const queryLocation = {
+                        //     x: +longitude,
+                        //     y: +latitude,
+                        //     longitude,
+                        //     latitude,
+                        //     spatialReference: {
+                        //         wkid: 4326,
+                        //     },
+                        // } as Point;
                     }}
                 />
             </MapView>

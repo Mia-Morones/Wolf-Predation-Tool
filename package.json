@@ -2,6 +2,7 @@
   "name": "react-redux-arcgis-boilerplate",
   "version": "1.0.0",
   "description": "Start React+Redux+@arcgis/core project with TypeScript in an easier and faster way",
+  "title": "Wolf Livestock Conflict Calculator",
   "main": "index.js",
   "scripts": {
     "test": "jest --passWithNoTests",
