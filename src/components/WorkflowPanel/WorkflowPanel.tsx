@@ -15,7 +15,7 @@ export const StepperContentContainerClasses =
 
 export const WorkflowPanel = () => {
     return (
-        <div className=" w-full">
+        <div className=" w-full h-full overflow-y-auto">
             <CalciteStepper layout="vertical" icon>
                 <CalciteStepperItem
                     heading="Step 1: Select a location"
@@ -32,11 +32,11 @@ export const WorkflowPanel = () => {
                     <QuizAboutOperation />
                 </CalciteStepperItem>
 
-                <CalciteStepperItem heading="Step 4: Value of Damage">
+                <CalciteStepperItem heading="Step 4: Damage Value">
                     <ValueOfDamage />
                 </CalciteStepperItem>
 
-                <CalciteStepperItem heading="Step 5: Management Practice Cost Adjustments">
+                <CalciteStepperItem heading="Step 5: Cost Adjustment">
                     <CostAdjustment />
                 </CalciteStepperItem>
 

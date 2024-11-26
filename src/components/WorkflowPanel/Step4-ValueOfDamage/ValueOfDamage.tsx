@@ -24,7 +24,7 @@ const Table: FC<TableProps> = ({
 }) => {
     return (
         <div
-            className="grid gap-3 my-1"
+            className="grid gap-3 my-2"
             style={{
                 gridTemplateColumns: `120px 1fr 1fr`,
             }}
