@@ -13,18 +13,18 @@ export const AppLayout = () => {
         <>
             <AppHeader />
 
-            <div className="absolute top-[65px] bottom-0 w-screen flex  bg-theme-background text-theme-foreground">
-                <div className=" w-[600px] shrink-0 h-full p-4 z-10">
+            <div className="absolute top-[65px] bottom-0 w-screen xl:flex bg-theme-background text-theme-foreground">
+                <div className=" w-full xl:w-[600px] shrink-0 h-auto xl:h-full p-4 z-10">
                     <WorkflowPanel />
                 </div>
 
-                <div className="relative grow">
+                <div className="relative grow h-[500px] xl:h-full w-full xl:w-auto">
                     <MapViewContainer />
                 </div>
 
-                {/* <div className=" w-96 shrink-0 h-full p-4 bg-theme-background text-theme-foreground z-10">
+                <div className="xl:absolute xl:top-0 xl:bottom-0 xl:right-0 w-full xl:w-[400px] shrink-0 h-auto xl:h-full p-4 bg-white bg-opacity-50 backdrop-blur-sm text-theme-foreground z-10">
                     <InfoPanel />
-                </div> */}
+                </div>
             </div>
         </>
     );

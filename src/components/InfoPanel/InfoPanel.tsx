@@ -1,5 +1,5 @@
 import React from 'react';
 
 export const InfoPanel = () => {
-    return <div>InfoPanel</div>;
+    return <div className="p-4">Map Legend and Info goes here</div>;
 };

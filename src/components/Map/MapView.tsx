@@ -66,6 +66,9 @@ const MapView: React.FC<Props> = ({
                 snapToZoom: false,
             },
             popupEnabled: false,
+            padding: {
+                right: 400,
+            },
         });
 
         mapViewRef.current.when(() => {
