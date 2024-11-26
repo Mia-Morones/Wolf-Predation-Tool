@@ -1,6 +1,7 @@
 import { selectWolfCattleConflictProbability } from '@store/WolfPredation/selectors';
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { StepperContentContainerClasses } from '../WorkflowPanel';
 
 export const RiskAdjustments = () => {
     const conflictProbability = useSelector(
@@ -8,7 +9,7 @@ export const RiskAdjustments = () => {
     );
 
     return (
-        <div className="p-2 text-theme-foreground text-sm">
+        <div className={StepperContentContainerClasses}>
             <div className="mb-6 flex items-center justify-between text-base">
                 <h4>Your base probability for wolf/cattle conflict is:</h4>
                 <h4 className=" font-bold text-red-500">

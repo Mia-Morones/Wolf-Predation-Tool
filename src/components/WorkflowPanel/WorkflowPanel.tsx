@@ -3,12 +3,15 @@ import {
     CalciteStepperItem,
 } from '@esri/calcite-components-react';
 import React from 'react';
-import { LocationSelector } from './LocationSelector/LocationSelector';
-import { RiskAdjustments } from './RiskAdjustments/RiskAdjustments';
-import { QuizAboutOperation } from './QuizAboutOperation/QuizAboutOperation';
-import { ValueOfDamage } from './ValueOfDamage/ValueOfDamage';
-import { CostAdjustment } from './CostAdjustment/CostAdjustment';
-import { BenefitsAndResults } from './BenefitsAndResults/BenefitsAndResults';
+import { LocationSelector } from './Step1-LocationSelector/LocationSelector';
+import { RiskAdjustments } from './Step2-RiskAdjustments/RiskAdjustments';
+import { QuizAboutOperation } from './Step3-QuizAboutOperation/QuizAboutOperation';
+import { ValueOfDamage } from './Step4-ValueOfDamage/ValueOfDamage';
+import { CostAdjustment } from './Step5-CostAdjustment/CostAdjustment';
+import { BenefitsAndResults } from './Step6-BenefitsAndResults/BenefitsAndResults';
+
+export const StepperContentContainerClasses =
+    'p-2 text-theme-foreground text-sm';
 
 export const WorkflowPanel = () => {
     return (
