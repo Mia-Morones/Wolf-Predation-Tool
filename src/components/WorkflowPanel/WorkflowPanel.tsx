@@ -40,7 +40,7 @@ export const WorkflowPanel = () => {
                     <CostAdjustment />
                 </CalciteStepperItem>
 
-                <CalciteStepperItem heading="Step 6: Benefit of Management Practices">
+                <CalciteStepperItem heading="Step 6: Benefit Analysis">
                     <BenefitsAndResults />
                 </CalciteStepperItem>
             </CalciteStepper>

@@ -52,6 +52,7 @@ module.exports = {
       theme: {
         'background': 'var(--theme-background)',
         'foreground': 'var(--theme-foreground)',
+        'brand': 'var(--calcite-ui-brand)',
       }
     },
     container: {

@@ -48,7 +48,7 @@ export const QuizAboutOperation = () => {
                                 }
                                 scale="s"
                             />
-                            <span className="ml-2"> {livestock}:</span>
+                            <span className="ml-2"> {livestock}</span>
                         </div>
                     );
                 })}
