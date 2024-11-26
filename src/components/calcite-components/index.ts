@@ -10,5 +10,7 @@ import '@esri/calcite-components/dist/components/calcite-input-text';
 import '@esri/calcite-components/dist/components/calcite-checkbox';
 import '@esri/calcite-components/dist/components/calcite-radio-button';
 import '@esri/calcite-components/dist/components/calcite-tooltip';
+import '@esri/calcite-components/dist/components/calcite-stepper';
+import '@esri/calcite-components/dist/components/calcite-stepper-item';
 
 setAssetPath('https://js.arcgis.com/calcite-components/2.13.2/assets');
