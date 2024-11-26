@@ -1,4 +1,4 @@
 :root {
-    --theme-background: #000;
-    --theme-foreground: #fff;
+    --theme-background: var(--calcite-color-background);
+    --theme-foreground: var(--calcite-color-text-1);
 }
