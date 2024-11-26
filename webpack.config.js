@@ -18,7 +18,7 @@ module.exports =  (env, options)=> {
         mode: options.mode,
         entry: path.resolve(__dirname, './src/index.tsx'),
         output: {
-            path: path.resolve(__dirname, './dist'),
+            path: path.resolve(__dirname, './docs'),
             filename: '[name].[contenthash].js',
             chunkFilename: '[name].[contenthash].js',
             clean: true
