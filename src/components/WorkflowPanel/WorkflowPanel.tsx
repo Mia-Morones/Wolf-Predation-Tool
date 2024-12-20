@@ -17,10 +17,7 @@ export const WorkflowPanel = () => {
     return (
         <div className=" w-full h-full overflow-y-auto">
             <CalciteStepper layout="vertical" icon>
-                <CalciteStepperItem
-                    heading="Step 1: Select a location"
-                    selected
-                >
+                <CalciteStepperItem heading="Step 1: Select a location">
                     <LocationSelector />
                 </CalciteStepperItem>
 
