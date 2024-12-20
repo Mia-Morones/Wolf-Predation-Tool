@@ -4,9 +4,13 @@ import MapViewContainer from '@components/Map/MapViewContainer';
 import { WorkflowPanel } from '@components/WorkflowPanel/WorkflowPanel';
 import { CalciteButton } from '@esri/calcite-components-react';
 import { useSaveAppState2HashParams } from '@hooks/useSaveAppState2HashParams';
+import { qeuryWolfLivestockConflictRiskFeatures } from '@store/WolfPredation/thunks';
 import React from 'react';
+import { useDispatch } from 'react-redux';
 
 export const AppLayout = () => {
+    const dispatch = useDispatch();
+
     useSaveAppState2HashParams();
 
     return (
@@ -19,12 +23,19 @@ export const AppLayout = () => {
                 </div>
 
                 <div className="relative grow h-[500px] xl:h-full w-full xl:w-auto">
-                    <MapViewContainer />
+                    <MapViewContainer
+                        mapOnClick={(point) => {
+                            console.log('clicked on map', point);
+                            dispatch(
+                                qeuryWolfLivestockConflictRiskFeatures(point)
+                            );
+                        }}
+                    />
                 </div>
 
-                <div className="xl:absolute xl:top-0 xl:bottom-0 xl:right-0 w-full xl:w-[400px] shrink-0 h-auto xl:h-full p-4 bg-white bg-opacity-50 backdrop-blur-sm text-theme-foreground z-10">
+                {/* <div className="xl:absolute xl:top-0 xl:bottom-0 xl:right-0 w-full xl:w-[400px] shrink-0 h-auto xl:h-full p-4 bg-white bg-opacity-50 backdrop-blur-sm text-theme-foreground z-10">
                     <InfoPanel />
-                </div>
+                </div> */}
             </div>
         </>
     );

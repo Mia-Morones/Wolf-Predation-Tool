@@ -95,23 +95,28 @@ const MapViewContainer: FC<Props> = ({ mapOnClick, children }) => {
 
                 <SearchWidget
                     searchCompletedHandler={(result) => {
-                        // // console.log(result)
-                        // const { feature } = result;
-                        // // console.log(feature)
-                        // if (!feature) {
-                        //     return;
-                        // }
-                        // const { latitude, longitude } =
-                        //     feature.geometry as Point;
-                        // const queryLocation = {
-                        //     x: +longitude,
-                        //     y: +latitude,
-                        //     longitude,
-                        //     latitude,
-                        //     spatialReference: {
-                        //         wkid: 4326,
-                        //     },
-                        // } as Point;
+                        // console.log(result)
+                        const { feature } = result;
+                        // console.log(feature)
+                        if (!feature) {
+                            return;
+                        }
+                        const { latitude, longitude } =
+                            feature.geometry as Point;
+
+                        const queryLocation = {
+                            x: +longitude,
+                            y: +latitude,
+                            longitude,
+                            latitude,
+                            spatialReference: {
+                                wkid: 4326,
+                            },
+                        } as Point;
+
+                        if (mapOnClick) {
+                            mapOnClick(queryLocation);
+                        }
                     }}
                 />
             </MapView>

@@ -79,6 +79,7 @@
   },
   "dependencies": {
     "@arcgis/core": "^4.31.0",
+    "@esri/arcgis-rest-feature-service": "^4.1.0",
     "@esri/calcite-components-react": "^2.13.2",
     "@reduxjs/toolkit": "1.8",
     "@types/react": "^18.0.9",
