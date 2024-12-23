@@ -2,12 +2,10 @@ import { selectWolfCattleConflictProbability } from '@store/WolfPredation/select
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { StepperContentContainerClasses } from '../WorkflowPanel';
+import { useRoundedConflictProbability } from '@hooks/useRoundedConflictProbability';
 
 export const RiskAdjustments = () => {
-    const conflictProbability = useSelector(
-        selectWolfCattleConflictProbability
-    );
-
+    const conflictProbability = useRoundedConflictProbability();
     return (
         <div className={StepperContentContainerClasses}>
             <div className="mb-6 flex items-center justify-between text-base">
@@ -15,8 +13,7 @@ export const RiskAdjustments = () => {
                 <h4 className=" font-bold text-red-500">
                     {conflictProbability === null
                         ? 'unknown'
-                        : Math.round(conflictProbability * 100).toFixed(0) +
-                          '%'}
+                        : conflictProbability + '%'}
                 </h4>
             </div>
 

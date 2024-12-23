@@ -1,13 +1,18 @@
 import React from 'react';
 import { StepperContentContainerClasses } from '../WorkflowPanel';
+import { useRoundedConflictProbability } from '@hooks/useRoundedConflictProbability';
 
 export const BenefitsAndResults = () => {
+    const conflictProbability = useRoundedConflictProbability();
+
     return (
         <div className={StepperContentContainerClasses}>
             <p className="mb-4">
                 Based on your location, there is a{' '}
-                <span className="text-red-500 font-bold">45%</span> mean
-                probability of a wolf conflict/predation occurring.
+                <span className="text-red-500 font-bold">
+                    {conflictProbability}%
+                </span>{' '}
+                mean probability of a wolf conflict/predation occurring.
             </p>
             <p className="mb-4">
                 The average value of a head of cattle on your operation is
