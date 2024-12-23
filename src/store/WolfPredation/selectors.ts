@@ -20,3 +20,18 @@ export const selectLivestockHandlingCost = createSelector(
     (state: RootState) => state.WolfPredation.livestockHandlingCost,
     (livestockHandlingCost) => livestockHandlingCost
 );
+
+export const selectMilesOfTurboFladry = createSelector(
+    (state: RootState) => state.WolfPredation.milesOfTurboFladry,
+    (milesOfTurboFladry) => milesOfTurboFladry
+);
+
+export const selectNumberOfRangeRiders = createSelector(
+    (state: RootState) => state.WolfPredation.numberOfRangeRiders,
+    (numberOfRangeRiders) => numberOfRangeRiders
+);
+
+export const selectCarcassCompostingCost = createSelector(
+    (state: RootState) => state.WolfPredation.carcassCompostingCost,
+    (carcassCompostingCost) => carcassCompostingCost
+);

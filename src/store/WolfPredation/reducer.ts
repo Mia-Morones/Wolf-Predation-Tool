@@ -48,6 +48,18 @@ export type WolfPredationState = {
     livestockHandlingCost: {
         [key in Livestock]: number;
     };
+    /**
+     * total number of turbo fladry in miles
+     */
+    milesOfTurboFladry: number;
+    /**
+     * total number of range riders
+     */
+    numberOfRangeRiders: number;
+    /**
+     * total cost of carcass composting
+     */
+    carcassCompostingCost: number;
 };
 
 export const initialWolfPredationState: WolfPredationState = {
@@ -76,6 +88,9 @@ export const initialWolfPredationState: WolfPredationState = {
         cows: 0,
         rams: 0,
     },
+    milesOfTurboFladry: 0,
+    numberOfRangeRiders: 0,
+    carcassCompostingCost: 0,
 };
 const slice = createSlice({
     name: 'WolfPredation',
@@ -117,6 +132,18 @@ const slice = createSlice({
             state.livestockHandlingCost[action.payload.livestock] =
                 action.payload.value;
         },
+        milesOfTurboFladryChanged: (state, action: PayloadAction<number>) => {
+            state.milesOfTurboFladry = action.payload;
+        },
+        numberOfRangeRidersChanged: (state, action: PayloadAction<number>) => {
+            state.numberOfRangeRiders = action.payload;
+        },
+        carcassCompostingCostChanged: (
+            state,
+            action: PayloadAction<number>
+        ) => {
+            state.carcassCompostingCost = action.payload;
+        },
     },
 });
 const { reducer } = slice;
@@ -125,5 +152,8 @@ export const {
     livestockHerdSizeChanged,
     livestockMarketValueChanged,
     livestockHandlingCostChanged,
+    milesOfTurboFladryChanged,
+    numberOfRangeRidersChanged,
+    carcassCompostingCostChanged,
 } = slice.actions;
 export default reducer;

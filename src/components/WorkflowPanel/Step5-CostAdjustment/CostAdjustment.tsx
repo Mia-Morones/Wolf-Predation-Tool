@@ -1,6 +1,17 @@
 import React, { FC } from 'react';
 import { StepperContentContainerClasses } from '../WorkflowPanel';
 import { CalciteInputNumber } from '@esri/calcite-components-react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+    selectMilesOfTurboFladry,
+    selectNumberOfRangeRiders,
+    selectCarcassCompostingCost,
+} from '@store/WolfPredation/selectors';
+import {
+    carcassCompostingCostChanged,
+    milesOfTurboFladryChanged,
+    numberOfRangeRidersChanged,
+} from '@store/WolfPredation/reducer';
 
 type CostAdjustmentTableProps = {
     title: string;
@@ -33,12 +44,22 @@ const CostAdjustmentTable: FC<CostAdjustmentTableProps> = ({
                 step={1}
                 // max={100000}
                 min={0}
+                value={value.toString()}
+                onCalciteInputNumberChange={(e) => {
+                    onChange(parseFloat(e.target.value));
+                }}
             />
         </div>
     );
 };
 
 export const CostAdjustment = () => {
+    const dispatch = useDispatch();
+
+    const milesOfFencing = useSelector(selectMilesOfTurboFladry);
+    const rangeRiders = useSelector(selectNumberOfRangeRiders);
+    const carcassComposting = useSelector(selectCarcassCompostingCost);
+
     return (
         <div className={StepperContentContainerClasses}>
             <p className="mb-6">
@@ -52,22 +73,28 @@ export const CostAdjustment = () => {
             <CostAdjustmentTable
                 title={'Turbo Fladry'}
                 description="How many miles of fencing would you need?"
-                value={0}
-                onChange={() => {}}
+                value={milesOfFencing}
+                onChange={(mile) => {
+                    dispatch(milesOfTurboFladryChanged(mile));
+                }}
             />
 
             <CostAdjustmentTable
                 title={'Range Riding'}
                 description="How many range riders would you need?"
-                value={0}
-                onChange={() => {}}
+                value={rangeRiders}
+                onChange={(numOfRiders) => {
+                    dispatch(numberOfRangeRidersChanged(numOfRiders));
+                }}
             />
 
             <CostAdjustmentTable
                 title={'Carcass Composting'}
                 description="This is calculated as price/carcass"
-                value={0}
-                onChange={() => {}}
+                value={carcassComposting}
+                onChange={(val) => {
+                    dispatch(carcassCompostingCostChanged(val));
+                }}
             />
         </div>
     );
