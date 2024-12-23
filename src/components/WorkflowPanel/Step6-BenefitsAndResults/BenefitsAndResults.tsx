@@ -1,28 +1,80 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { StepperContentContainerClasses } from '../WorkflowPanel';
 import { useRoundedConflictProbability } from '@hooks/useRoundedConflictProbability';
+import { useSelector } from 'react-redux';
+import {
+    selectCarcassCompostingCost,
+    selectLivestockHandlingCost,
+    selectLivestockHerdSize,
+    selectLivestockMarketValue,
+    selectMilesOfTurboFladry,
+    selectNumberOfRangeRiders,
+    selectWolfCattleConflictProbability,
+} from '@store/WolfPredation/selectors';
+import { LIVESTOCKS } from '@store/WolfPredation/reducer';
 
 export const BenefitsAndResults = () => {
-    const conflictProbability = useRoundedConflictProbability();
+    const formattedConflictProbability = useRoundedConflictProbability();
+    const conflictProbability = useSelector(
+        selectWolfCattleConflictProbability
+    );
+
+    const livestockHerdSize = useSelector(selectLivestockHerdSize);
+    const livestockMarketValue = useSelector(selectLivestockMarketValue);
+    const livestockHandlingCost = useSelector(selectLivestockHandlingCost);
+
+    const milesOfFencing = useSelector(selectMilesOfTurboFladry);
+    const rangeRiders = useSelector(selectNumberOfRangeRiders);
+    const carcassCompostingCost = useSelector(selectCarcassCompostingCost);
+
+    const totalMarketValue = useMemo(() => {
+        const total = LIVESTOCKS.reduce((acc, livestock) => {
+            return (
+                acc +
+                livestockHerdSize[livestock] * livestockMarketValue[livestock]
+            );
+        }, 0);
+
+        return total;
+    }, [livestockHerdSize, livestockMarketValue]);
+
+    const totalHandlingCost = useMemo(() => {
+        const total = LIVESTOCKS.reduce((acc, livestock) => {
+            return (
+                acc +
+                livestockHerdSize[livestock] * livestockHandlingCost[livestock]
+            );
+        }, 0);
+
+        return total;
+    }, [livestockHerdSize, livestockHandlingCost]);
+
+    const totalPotentialLose = useMemo(() => {
+        return (totalMarketValue + totalHandlingCost) * conflictProbability;
+    }, [totalMarketValue, totalHandlingCost, conflictProbability]);
 
     return (
         <div className={StepperContentContainerClasses}>
             <p className="mb-4">
                 Based on your location, there is a{' '}
                 <span className="text-red-500 font-bold">
-                    {conflictProbability}%
+                    {formattedConflictProbability}%
                 </span>{' '}
                 mean probability of a wolf conflict/predation occurring.
             </p>
             <p className="mb-4">
-                The average value of a head of cattle on your operation is
-                $1,150. Xx250x is the handling cost, for a total potential loss
-                of yyyy
+                The total market value is <b>${totalMarketValue.toFixed(0)}</b>,
+                and the the handling cost is <b>${totalHandlingCost}</b>, for a
+                total potential loss of <a>{totalPotentialLose.toFixed(2)}</a>.
             </p>
             <p className="mb-6">
-                Your expected loss in any one year is 0.45 x (1150+250) ={' '}
-                <span className="font-bold">$630.00</span> dollars of lost
-                income.
+                Your expected loss in any one year is{' '}
+                {conflictProbability.toFixed(2)} x (${totalMarketValue}+$
+                {totalHandlingCost}) ={' '}
+                <span className="font-bold">
+                    ${totalPotentialLose.toFixed(2)}
+                </span>{' '}
+                dollars of lost income.
             </p>
 
             <div>
