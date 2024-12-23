@@ -1,4 +1,6 @@
+import { Point } from '@arcgis/core/geometry';
 import { MAP_CENTER, MAP_ZOOM, WEB_MAP_ID } from '@constants/map';
+import { queryFeatures } from '@esri/arcgis-rest-feature-service';
 import {
     createSlice,
     // createSelector,
@@ -26,6 +28,10 @@ export const LIVESTOCKS: Livestock[] = [
 
 // import { RootState, StoreDispatch, StoreGetState } from '../configureStore';
 export type WolfPredationState = {
+    /**
+     * query point
+     */
+    queryPoint: Point;
     /**
      * base probability for wolf/cattle conflict
      */
@@ -63,6 +69,7 @@ export type WolfPredationState = {
 };
 
 export const initialWolfPredationState: WolfPredationState = {
+    queryPoint: null,
     wolfCattleConflictProbability: 0,
     livestockHerdSize: {
         calves: 0,
@@ -96,6 +103,9 @@ const slice = createSlice({
     name: 'WolfPredation',
     initialState: initialWolfPredationState,
     reducers: {
+        queryPointChanged: (state, action: PayloadAction<Point>) => {
+            state.queryPoint = action.payload;
+        },
         wolfCattleConflictProbabilityChanged: (
             state,
             action: PayloadAction<number>
@@ -155,5 +165,6 @@ export const {
     milesOfTurboFladryChanged,
     numberOfRangeRidersChanged,
     carcassCompostingCostChanged,
+    queryPointChanged,
 } = slice.actions;
 export default reducer;

@@ -35,3 +35,8 @@ export const selectCarcassCompostingCost = createSelector(
     (state: RootState) => state.WolfPredation.carcassCompostingCost,
     (carcassCompostingCost) => carcassCompostingCost
 );
+
+export const selectQueryPoint = createSelector(
+    (state: RootState) => state.WolfPredation.queryPoint,
+    (queryPoint) => queryPoint
+);
