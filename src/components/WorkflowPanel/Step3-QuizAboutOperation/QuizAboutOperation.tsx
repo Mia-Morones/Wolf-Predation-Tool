@@ -5,32 +5,35 @@ import {
     CalciteInput,
     CalciteInputNumber,
 } from '@esri/calcite-components-react';
+import {
+    Livestock,
+    livestockHerdSizeChanged,
+} from '@store/WolfPredation/reducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectLivestockHerdSize } from '@store/WolfPredation/selectors';
 
-const LIVESTOCKS = ['calves', 'lambs', 'yearlings', 'ewes', 'cows', 'rams'];
+const LIVESTOCKS: Livestock[] = [
+    Livestock.Calves,
+    Livestock.Lambs,
+    Livestock.Yearlings,
+    Livestock.Ewes,
+    Livestock.Cows,
+    Livestock.Rams,
+];
 
 export const QuizAboutOperation = () => {
-    const [selectedLivestocks, setSelectedLivestocks] = React.useState<
-        string[]
-    >([]);
+    const dispatch = useDispatch();
 
-    const toggleLivestock = (livestock: string) => {
-        if (selectedLivestocks.includes(livestock)) {
-            setSelectedLivestocks(
-                selectedLivestocks.filter((l) => l !== livestock)
-            );
-        } else {
-            setSelectedLivestocks([...selectedLivestocks, livestock]);
-        }
-    };
+    const herdSizeByLivestock = useSelector(selectLivestockHerdSize);
 
     return (
         <div className={StepperContentContainerClasses}>
             <h4 className="mb-4 text-base">
-                Do you have any of the following livestock? Check the box if
-                yes:
+                Please enter the estimated size for each of the following
+                livestock:
             </h4>
 
-            <div className="grid grid-cols-2 gap-2 px-2 mb-6 ">
+            {/* <div className="grid grid-cols-2 gap-2 px-2 mb-6 ">
                 {LIVESTOCKS.map((livestock, index) => {
                     return (
                         <div
@@ -52,9 +55,40 @@ export const QuizAboutOperation = () => {
                         </div>
                     );
                 })}
-            </div>
+            </div> */}
 
-            <div className="mb-6 flex items-center justify-between text-base">
+            {LIVESTOCKS.map((livestock, index) => {
+                const value = herdSizeByLivestock[livestock];
+                return (
+                    <div
+                        key={livestock}
+                        className="mb-6 grid grid-cols-2 gap-2 items-center"
+                    >
+                        <h4>
+                            What is the approximate size of your {livestock}{' '}
+                            herd?
+                        </h4>
+                        <CalciteInputNumber
+                            placeholder={`${livestock} size`}
+                            step={1}
+                            max={1000}
+                            min={0}
+                            value={value.toString()}
+                            onCalciteInputNumberChange={(e) => {
+                                // console.log(e.target.value);
+                                dispatch(
+                                    livestockHerdSizeChanged({
+                                        livestock,
+                                        size: parseInt(e.target.value),
+                                    })
+                                );
+                            }}
+                        />
+                    </div>
+                );
+            })}
+
+            {/* <div className="mb-6 flex items-center justify-between text-base">
                 <h4>What is the approximate size of your cattle herd?</h4>
                 <CalciteInputNumber
                     placeholder="cattle herd size"
@@ -72,7 +106,7 @@ export const QuizAboutOperation = () => {
                     max={100000}
                     min={0}
                 />
-            </div>
+            </div> */}
         </div>
     );
 };
