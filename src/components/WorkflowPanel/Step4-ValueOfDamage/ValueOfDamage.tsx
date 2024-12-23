@@ -4,27 +4,38 @@ import {
     CalciteInput,
     CalciteInputNumber,
 } from '@esri/calcite-components-react';
+import {
+    Livestock,
+    livestockHandlingCostChanged,
+    livestockMarketValueChanged,
+    LIVESTOCKS,
+} from '@store/WolfPredation/reducer';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+    selectLivestockHandlingCost,
+    selectLivestockMarketValue,
+} from '@store/WolfPredation/selectors';
 
 type TableProps = {
-    livestock: string;
+    livestock: Livestock;
     marketValue: number;
-    marketValueOnChange: (value: number) => void;
     cost: number;
+    marketValueOnChange: (value: number) => void;
     costOnChange: (value: number) => void;
 };
 
-const LIVESTOCKS = ['calves', 'lambs', 'yearlings', 'ewes', 'cows', 'rams'];
+// const LIVESTOCKS = ['calves', 'lambs', 'yearlings', 'ewes', 'cows', 'rams'];
 
 const Table: FC<TableProps> = ({
     livestock,
     marketValue,
-    marketValueOnChange,
     cost,
+    marketValueOnChange,
     costOnChange,
 }) => {
     return (
         <div
-            className="grid gap-3 my-2"
+            className="grid gap-3 my-2 items-center"
             style={{
                 gridTemplateColumns: `120px 1fr 1fr`,
             }}
@@ -33,20 +44,36 @@ const Table: FC<TableProps> = ({
             <CalciteInputNumber
                 placeholder="market value"
                 step={1}
-                // max={100000}
+                max={100000}
                 min={0}
+                value={marketValue.toString()}
+                suffixText="$"
+                onCalciteInputNumberChange={(e) => {
+                    marketValueOnChange(parseInt(e.target.value));
+                }}
             />
             <CalciteInputNumber
-                placeholder="costs"
+                placeholder="handling costs"
                 step={1}
-                // max={100000}
+                max={100000}
                 min={0}
+                value={cost.toString()}
+                suffixText="$"
+                onCalciteInputNumberChange={(e) => {
+                    costOnChange(parseInt(e.target.value));
+                }}
             />
         </div>
     );
 };
 
 export const ValueOfDamage = () => {
+    const dispatch = useDispatch();
+
+    const marketValueByLivestock = useSelector(selectLivestockMarketValue);
+
+    const handlingCostByLivestock = useSelector(selectLivestockHandlingCost);
+
     return (
         <div className={StepperContentContainerClasses}>
             <p className="mb-4">
@@ -77,14 +104,31 @@ export const ValueOfDamage = () => {
             </div>
 
             {LIVESTOCKS.map((livestock) => {
+                const marketValue = marketValueByLivestock[livestock];
+                const handlingCost = handlingCostByLivestock[livestock];
+
                 return (
                     <Table
                         key={livestock}
                         livestock={livestock}
-                        costOnChange={(val) => {}}
-                        marketValueOnChange={(val) => {}}
-                        marketValue={0}
-                        cost={0}
+                        costOnChange={(val) => {
+                            dispatch(
+                                livestockHandlingCostChanged({
+                                    livestock,
+                                    value: val,
+                                })
+                            );
+                        }}
+                        marketValueOnChange={(val) => {
+                            dispatch(
+                                livestockMarketValueChanged({
+                                    livestock,
+                                    value: val,
+                                })
+                            );
+                        }}
+                        marketValue={marketValue}
+                        cost={handlingCost}
                     />
                 );
             })}

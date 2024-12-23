@@ -6,20 +6,11 @@ import {
     CalciteInputNumber,
 } from '@esri/calcite-components-react';
 import {
-    Livestock,
     livestockHerdSizeChanged,
+    LIVESTOCKS,
 } from '@store/WolfPredation/reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectLivestockHerdSize } from '@store/WolfPredation/selectors';
-
-const LIVESTOCKS: Livestock[] = [
-    Livestock.Calves,
-    Livestock.Lambs,
-    Livestock.Yearlings,
-    Livestock.Ewes,
-    Livestock.Cows,
-    Livestock.Rams,
-];
 
 export const QuizAboutOperation = () => {
     const dispatch = useDispatch();
