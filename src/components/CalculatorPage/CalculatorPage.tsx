@@ -4,7 +4,7 @@ import MapViewContainer from '@components/Map/MapViewContainer';
 import { WorkflowPanel } from '@components/WorkflowPanel/WorkflowPanel';
 import { CalciteButton } from '@esri/calcite-components-react';
 // import { useSaveAppState2HashParams } from '@hooks/useSaveAppState2HashParams';
-import { qeuryWolfLivestockConflictRiskFeatures } from '@store/WolfPredation/thunks';
+import { setQueryGeometry } from '@store/WolfPredation/thunks';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 
@@ -25,10 +25,8 @@ export const CalculatorPage = () => {
                 <div className="relative grow h-[500px] xl:h-full w-full xl:w-auto">
                     <MapViewContainer
                         mapOnClick={(point) => {
-                            console.log('clicked on map', point);
-                            dispatch(
-                                qeuryWolfLivestockConflictRiskFeatures(point)
-                            );
+                            // console.log('clicked on map', point);
+                            dispatch(setQueryGeometry(point));
                         }}
                     />
                 </div>

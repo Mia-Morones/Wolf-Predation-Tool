@@ -18,3 +18,8 @@ body {
 .text-shadow {
     text-shadow: 0 0 3px rgba(0, 0, 0, 0.9);
 }
+
+.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}

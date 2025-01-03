@@ -1,4 +1,4 @@
-import { Point } from '@arcgis/core/geometry';
+import { Point, Polygon } from '@arcgis/core/geometry';
 import { IFeature } from '@esri/arcgis-rest-feature-service';
 
 const WOLF_LIVESTOCK_CONFLICT_RISK_SERVICE_URL =
@@ -12,26 +12,40 @@ enum WOLF_LIVESTOCK_CONFLICT_RISK_FIELD_NAMES {
 }
 
 type WolfLivestockConflictRiskFeature = {
-    objectId: number;
-    gridId: number;
-    cattleDensity: number;
+    // objectId: number;
+    // gridId: number;
+    // cattleDensity: number;
     probability: number;
 };
 
-export const queryWolfLivestockConflictFeatures = async (
-    point: Point
+export const queryAverageWolfLivestockConflict = async (
+    geometry: Point | Polygon
 ): Promise<WolfLivestockConflictRiskFeature[]> => {
+    const geometryType =
+        (geometry as Polygon)?.rings !== undefined
+            ? 'esriGeometryPolygon'
+            : 'esriGeometryPoint';
+
     const queryParams = new URLSearchParams({
         f: 'json',
-        geometry: JSON.stringify(point),
-        geometryType: 'esriGeometryPoint',
+        geometry: JSON.stringify(geometry),
+        geometryType,
         inSR: '4326',
-        outFields: [
-            WOLF_LIVESTOCK_CONFLICT_RISK_FIELD_NAMES.objectId,
-            WOLF_LIVESTOCK_CONFLICT_RISK_FIELD_NAMES.probability,
-            WOLF_LIVESTOCK_CONFLICT_RISK_FIELD_NAMES.cattleDensity,
-            WOLF_LIVESTOCK_CONFLICT_RISK_FIELD_NAMES.gridId,
-        ].join(','),
+        // outFields: [
+        //     WOLF_LIVESTOCK_CONFLICT_RISK_FIELD_NAMES.objectId,
+        //     WOLF_LIVESTOCK_CONFLICT_RISK_FIELD_NAMES.probability,
+        //     WOLF_LIVESTOCK_CONFLICT_RISK_FIELD_NAMES.cattleDensity,
+        //     WOLF_LIVESTOCK_CONFLICT_RISK_FIELD_NAMES.gridId,
+        // ].join(','),
+        outStatistics: JSON.stringify([
+            {
+                statisticType: 'avg',
+                onStatisticField:
+                    WOLF_LIVESTOCK_CONFLICT_RISK_FIELD_NAMES.probability,
+                outStatisticFieldName:
+                    WOLF_LIVESTOCK_CONFLICT_RISK_FIELD_NAMES.probability,
+            },
+        ]),
         spatialRel: 'esriSpatialRelIntersects',
         returnGeometry: 'false',
     });
@@ -54,17 +68,17 @@ export const queryWolfLivestockConflictFeatures = async (
         const { attributes } = feature;
 
         return {
-            objectid:
-                attributes[WOLF_LIVESTOCK_CONFLICT_RISK_FIELD_NAMES.objectId],
+            // objectid:
+            //     attributes[WOLF_LIVESTOCK_CONFLICT_RISK_FIELD_NAMES.objectId],
             probability:
                 attributes[
                     WOLF_LIVESTOCK_CONFLICT_RISK_FIELD_NAMES.probability
                 ],
-            gridId: attributes[WOLF_LIVESTOCK_CONFLICT_RISK_FIELD_NAMES.gridId],
-            cattleDensity:
-                attributes[
-                    WOLF_LIVESTOCK_CONFLICT_RISK_FIELD_NAMES.cattleDensity
-                ],
+            // gridId: attributes[WOLF_LIVESTOCK_CONFLICT_RISK_FIELD_NAMES.gridId],
+            // cattleDensity:
+            //     attributes[
+            //         WOLF_LIVESTOCK_CONFLICT_RISK_FIELD_NAMES.cattleDensity
+            //     ],
         };
     });
 };

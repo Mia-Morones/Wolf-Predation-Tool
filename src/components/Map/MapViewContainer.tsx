@@ -31,6 +31,7 @@ import { centerChanged, zoomChanged } from '@store/Map/reducer';
 
 import { Point } from '@arcgis/core/geometry';
 import SearchWidget from './SearchWidget';
+import { SektchWidget } from './SektchWidget';
 
 type Props = {
     /**
@@ -89,7 +90,7 @@ const MapViewContainer: FC<Props> = ({ mapOnClick, children }) => {
                         }
                     }}
                     mapViewUpdatingOnChange={(isUpdating) => {
-                        console.log('map view is updating', isUpdating);
+                        // console.log('map view is updating', isUpdating);
                     }}
                 />
 
@@ -119,6 +120,8 @@ const MapViewContainer: FC<Props> = ({ mapOnClick, children }) => {
                         }
                     }}
                 />
+
+                <SektchWidget />
             </MapView>
         </div>
     );

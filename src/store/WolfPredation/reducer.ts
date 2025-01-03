@@ -1,4 +1,4 @@
-import { Point } from '@arcgis/core/geometry';
+import { Geometry, Point, Polygon } from '@arcgis/core/geometry';
 import { MAP_CENTER, MAP_ZOOM, WEB_MAP_ID } from '@constants/map';
 import { queryFeatures } from '@esri/arcgis-rest-feature-service';
 import {
@@ -32,6 +32,14 @@ export type WolfPredationState = {
      * query point
      */
     queryPoint: Point;
+    /**
+     * query geometry
+     */
+    queryGeometry: Point | Polygon;
+    /**
+     * If true, the user is sketching on the map to draw the query geometry.
+     */
+    isSeketching: boolean;
     /**
      * base probability for wolf/cattle conflict
      */
@@ -70,6 +78,8 @@ export type WolfPredationState = {
 
 export const initialWolfPredationState: WolfPredationState = {
     queryPoint: null,
+    queryGeometry: null,
+    isSeketching: false,
     wolfCattleConflictProbability: 0,
     livestockHerdSize: {
         calves: 0,
@@ -105,6 +115,12 @@ const slice = createSlice({
     reducers: {
         queryPointChanged: (state, action: PayloadAction<Point>) => {
             state.queryPoint = action.payload;
+        },
+        queryGeomChanged: (state, action: PayloadAction<Point | Polygon>) => {
+            state.queryGeometry = action.payload;
+        },
+        isSketchingChanged: (state, action: PayloadAction<boolean>) => {
+            state.isSeketching = action.payload;
         },
         wolfCattleConflictProbabilityChanged: (
             state,
@@ -166,5 +182,7 @@ export const {
     numberOfRangeRidersChanged,
     carcassCompostingCostChanged,
     queryPointChanged,
+    queryGeomChanged,
+    isSketchingChanged,
 } = slice.actions;
 export default reducer;

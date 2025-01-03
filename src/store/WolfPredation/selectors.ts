@@ -40,3 +40,13 @@ export const selectQueryPoint = createSelector(
     (state: RootState) => state.WolfPredation.queryPoint,
     (queryPoint) => queryPoint
 );
+
+export const selectQueryGeometry = createSelector(
+    (state: RootState) => state.WolfPredation.queryGeometry,
+    (queryGeometry) => queryGeometry
+);
+
+export const selectIsSketching = createSelector(
+    (state: RootState) => state.WolfPredation.isSeketching,
+    (isSeketching) => isSeketching
+);
