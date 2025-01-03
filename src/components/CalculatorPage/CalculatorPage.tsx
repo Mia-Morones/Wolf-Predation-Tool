@@ -3,15 +3,15 @@ import { InfoPanel } from '@components/InfoPanel/InfoPanel';
 import MapViewContainer from '@components/Map/MapViewContainer';
 import { WorkflowPanel } from '@components/WorkflowPanel/WorkflowPanel';
 import { CalciteButton } from '@esri/calcite-components-react';
-import { useSaveAppState2HashParams } from '@hooks/useSaveAppState2HashParams';
+// import { useSaveAppState2HashParams } from '@hooks/useSaveAppState2HashParams';
 import { qeuryWolfLivestockConflictRiskFeatures } from '@store/WolfPredation/thunks';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 
-export const AppLayout = () => {
+export const CalculatorPage = () => {
     const dispatch = useDispatch();
 
-    useSaveAppState2HashParams();
+    // useSaveAppState2HashParams();
 
     return (
         <>
