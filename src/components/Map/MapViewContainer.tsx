@@ -32,6 +32,7 @@ import { centerChanged, zoomChanged } from '@store/Map/reducer';
 import { Point } from '@arcgis/core/geometry';
 import SearchWidget from './SearchWidget';
 import { SektchWidget } from './SektchWidget';
+import { HighlightSelectedHexgons } from './HighlightSelectedHexgons';
 
 type Props = {
     /**
@@ -122,6 +123,8 @@ const MapViewContainer: FC<Props> = ({ mapOnClick, children }) => {
                 />
 
                 <SektchWidget />
+
+                <HighlightSelectedHexgons />
             </MapView>
         </div>
     );
