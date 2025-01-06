@@ -19,24 +19,19 @@ type WolfLivestockConflictRiskFeature = {
 };
 
 export const queryAverageWolfLivestockConflict = async (
-    geometry: Point | Polygon
+    geometry: Point | Polygon,
+    geometryType: 'esriGeometryPolygon' | 'esriGeometryPoint'
 ): Promise<WolfLivestockConflictRiskFeature[]> => {
-    const geometryType =
-        (geometry as Polygon)?.rings !== undefined
-            ? 'esriGeometryPolygon'
-            : 'esriGeometryPoint';
+    // const geometryType =
+    //     (geometry as Polygon)?.rings !== undefined
+    //         ? 'esriGeometryPolygon'
+    //         : 'esriGeometryPoint';
 
     const queryParams = new URLSearchParams({
         f: 'json',
         geometry: JSON.stringify(geometry),
         geometryType,
         inSR: '4326',
-        // outFields: [
-        //     WOLF_LIVESTOCK_CONFLICT_RISK_FIELD_NAMES.objectId,
-        //     WOLF_LIVESTOCK_CONFLICT_RISK_FIELD_NAMES.probability,
-        //     WOLF_LIVESTOCK_CONFLICT_RISK_FIELD_NAMES.cattleDensity,
-        //     WOLF_LIVESTOCK_CONFLICT_RISK_FIELD_NAMES.gridId,
-        // ].join(','),
         outStatistics: JSON.stringify([
             {
                 statisticType: 'avg',

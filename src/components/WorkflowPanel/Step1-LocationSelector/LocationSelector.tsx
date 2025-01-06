@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StepperContentContainerClasses } from '../WorkflowPanel';
 import { SEARCH_WIDGET_CONTAINER_ID } from '@constants/UI';
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,10 +20,7 @@ import {
     CalciteTabs,
     CalciteTabTitle,
 } from '@esri/calcite-components-react';
-import {
-    resetQueryGeometry,
-    setQueryGeometry,
-} from '@store/WolfPredation/thunks';
+import { resetQueryGeometry } from '@store/WolfPredation/thunks';
 
 const QUERY_GEMO_TYPES: QueryGeometryType[] = ['point', 'rectangle'];
 
@@ -37,6 +34,10 @@ export const LocationSelector = () => {
     const shouldDisableSketching =
         isSeketching || queryGeometry ? true : undefined;
     const shouldHideClearSelection = !queryGeometry;
+
+    useEffect(() => {
+        dispatch(resetQueryGeometry());
+    }, [queryGeometryType]);
 
     return (
         <div className={StepperContentContainerClasses}>

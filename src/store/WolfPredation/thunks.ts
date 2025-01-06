@@ -6,6 +6,8 @@ import {
     queryGeomChanged,
     wolfCattleConflictProbabilityChanged,
 } from './reducer';
+import { selectQueryGeometryType } from './selectors';
+import { webMercatorToGeographic } from '@arcgis/core/geometry/support/webMercatorUtils';
 // import { webmapIdChanged } from './reducer';
 
 // export const qeuryWolfLivestockConflictRiskFeatures =
@@ -34,14 +36,52 @@ export const resetQueryGeometry = () => async (dispatch: StoreDispatch) => {
     dispatch(wolfCattleConflictProbabilityChanged(0));
 };
 
-export const setQueryGeometry =
-    (geometry: Point | Polygon) => async (dispatch: StoreDispatch) => {
+export const queryRiskProbabilityByPoint =
+    (point: Point) =>
+    async (dispatch: StoreDispatch, getState: StoreGetState) => {
+        const store = getState();
+
+        const queryGeometryType = selectQueryGeometryType(store);
+        // console.log('queryGeometryType', queryGeometryType);
+
+        if (queryGeometryType !== 'point') {
+            return;
+        }
+
+        dispatch(queryRiskProbability(point));
+    };
+
+export const queryRiskProbabilityByRectangle =
+    (rectange: Polygon) =>
+    async (dispatch: StoreDispatch, getState: StoreGetState) => {
+        const store = getState();
+
+        const queryGeometryType = selectQueryGeometryType(store);
+
+        if (queryGeometryType !== 'rectangle') {
+            return;
+        }
+        const geometry = webMercatorToGeographic(rectange) as Polygon;
+        dispatch(queryRiskProbability(geometry.toJSON()));
+    };
+
+export const queryRiskProbability =
+    (geometry: Point | Polygon) =>
+    async (dispatch: StoreDispatch, getState: StoreGetState) => {
+        const store = getState();
+
+        const queryGeometryType = selectQueryGeometryType(store);
+
         dispatch(queryGeomChanged(geometry));
         dispatch(isSketchingChanged(false));
 
         try {
-            const features = await queryAverageWolfLivestockConflict(geometry);
-            // console.log('feature', features);
+            const features = await queryAverageWolfLivestockConflict(
+                geometry,
+                queryGeometryType === 'point'
+                    ? 'esriGeometryPoint'
+                    : 'esriGeometryPolygon'
+            );
 
             const probability = features[0]?.probability || 0;
 

@@ -3,13 +3,17 @@ import { InfoPanel } from '@components/InfoPanel/InfoPanel';
 import MapViewContainer from '@components/Map/MapViewContainer';
 import { WorkflowPanel } from '@components/WorkflowPanel/WorkflowPanel';
 import { CalciteButton } from '@esri/calcite-components-react';
+import { selectQueryGeometryType } from '@store/WolfPredation/selectors';
 // import { useSaveAppState2HashParams } from '@hooks/useSaveAppState2HashParams';
-import { setQueryGeometry } from '@store/WolfPredation/thunks';
+import { queryRiskProbabilityByPoint } from '@store/WolfPredation/thunks';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 
 export const CalculatorPage = () => {
     const dispatch = useDispatch();
+
+    const queryGeometryType = useSelector(selectQueryGeometryType);
 
     // useSaveAppState2HashParams();
 
@@ -25,8 +29,7 @@ export const CalculatorPage = () => {
                 <div className="relative grow h-[500px] xl:h-full w-full xl:w-auto">
                     <MapViewContainer
                         mapOnClick={(point) => {
-                            // console.log('clicked on map', point);
-                            dispatch(setQueryGeometry(point));
+                            dispatch(queryRiskProbabilityByPoint(point));
                         }}
                     />
                 </div>

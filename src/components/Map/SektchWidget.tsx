@@ -6,10 +6,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
     selectIsSketching,
     selectQueryGeometry,
+    selectQueryGeometryType,
 } from '@store/WolfPredation/selectors';
 import { Polygon } from '@arcgis/core/geometry';
-import { setQueryGeometry } from '@store/WolfPredation/thunks';
-import { webMercatorToGeographic } from '@arcgis/core/geometry/support/webMercatorUtils';
+import { queryRiskProbabilityByRectangle } from '@store/WolfPredation/thunks';
+// import { queryRiskProbability } from '@store/WolfPredation/thunks';
+// import { webMercatorToGeographic } from '@arcgis/core/geometry/support/webMercatorUtils';
 
 type Props = {
     mapView?: MapView;
@@ -27,14 +29,20 @@ export const SektchWidget: FC<Props> = ({ mapView }) => {
 
     const isSeketching = useSelector(selectIsSketching);
     const queryGeometry = useSelector(selectQueryGeometry);
+    // const queryGeometryType = useSelector(selectQueryGeometryType);
 
     const layerRef = useRef<GraphicLayer>();
     const sketchViewModelRef = useRef<SketchViewModel>();
 
-    const queryGeometryOnChanged = async (geometry: Polygon) => {
-        geometry = webMercatorToGeographic(geometry) as Polygon;
-        dispatch(setQueryGeometry(geometry.toJSON()));
-    };
+    // const queryGeometryOnChanged = async (geometry: Polygon) => {
+
+    //     if(queryGeometryType !== 'rectangle') {
+    //         return;
+    //     }
+
+    //     geometry = webMercatorToGeographic(geometry) as Polygon;
+    //     dispatch(queryRiskProbability(geometry.toJSON()));
+    // };
 
     useEffect(() => {
         if (mapView) {
@@ -52,7 +60,12 @@ export const SektchWidget: FC<Props> = ({ mapView }) => {
             sketchViewModelRef.current.on('create', async (event) => {
                 if (event.state === 'complete') {
                     // console.log('sketchViewModel create complete', event)
-                    queryGeometryOnChanged(event.graphic.geometry as Polygon);
+                    // queryGeometryOnChanged(event.graphic.geometry as Polygon);
+                    dispatch(
+                        queryRiskProbabilityByRectangle(
+                            event.graphic.geometry as Polygon
+                        )
+                    );
 
                     // this polygon will be used to query features that intersect it
                     // const geometries = polygonGraphicsLayer.graphics.map(function (graphic) {
@@ -64,8 +77,13 @@ export const SektchWidget: FC<Props> = ({ mapView }) => {
             sketchViewModelRef.current.on('update', async (event) => {
                 if (event.state === 'complete') {
                     // console.log('sketchViewModel update complete', event)
-                    queryGeometryOnChanged(
-                        event.graphics[0].geometry as Polygon
+                    // queryGeometryOnChanged(
+                    //     event.graphics[0].geometry as Polygon
+                    // );
+                    dispatch(
+                        queryRiskProbabilityByRectangle(
+                            event.graphics[0].geometry as Polygon
+                        )
                     );
 
                     // this polygon will be used to query features that intersect it
