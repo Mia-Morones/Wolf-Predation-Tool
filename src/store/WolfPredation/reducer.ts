@@ -26,8 +26,11 @@ export const LIVESTOCKS: Livestock[] = [
     Livestock.Rams,
 ];
 
+export type QueryGeometryType = 'point' | 'rectangle';
+
 // import { RootState, StoreDispatch, StoreGetState } from '../configureStore';
 export type WolfPredationState = {
+    queryGeometryType: QueryGeometryType;
     /**
      * query point
      */
@@ -77,6 +80,7 @@ export type WolfPredationState = {
 };
 
 export const initialWolfPredationState: WolfPredationState = {
+    queryGeometryType: 'point',
     queryPoint: null,
     queryGeometry: null,
     isSeketching: false,
@@ -113,6 +117,12 @@ const slice = createSlice({
     name: 'WolfPredation',
     initialState: initialWolfPredationState,
     reducers: {
+        queryGeometryTypeChanged: (
+            state,
+            action: PayloadAction<QueryGeometryType>
+        ) => {
+            state.queryGeometryType = action.payload;
+        },
         queryPointChanged: (state, action: PayloadAction<Point>) => {
             state.queryPoint = action.payload;
         },
@@ -184,5 +194,6 @@ export const {
     queryPointChanged,
     queryGeomChanged,
     isSketchingChanged,
+    queryGeometryTypeChanged,
 } = slice.actions;
 export default reducer;

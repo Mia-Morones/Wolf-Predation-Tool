@@ -14,4 +14,9 @@ import '@esri/calcite-components/dist/components/calcite-tooltip';
 import '@esri/calcite-components/dist/components/calcite-stepper';
 import '@esri/calcite-components/dist/components/calcite-stepper-item';
 
+import '@esri/calcite-components/dist/components/calcite-tabs';
+import '@esri/calcite-components/dist/components/calcite-tab';
+import '@esri/calcite-components/dist/components/calcite-tab-nav';
+import '@esri/calcite-components/dist/components/calcite-tab-title';
+
 setAssetPath('https://js.arcgis.com/calcite-components/2.13.2/assets');

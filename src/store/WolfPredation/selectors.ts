@@ -50,3 +50,8 @@ export const selectIsSketching = createSelector(
     (state: RootState) => state.WolfPredation.isSeketching,
     (isSeketching) => isSeketching
 );
+
+export const selectQueryGeometryType = createSelector(
+    (state: RootState) => state.WolfPredation.queryGeometryType,
+    (queryGeometryType) => queryGeometryType
+);
