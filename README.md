@@ -1,4 +1,4 @@
-# Wolf Predation App
+# Wolf Livestock Conflict Calculator App
 
 ## Getting Started
 Before you start, make sure you have a fresh version of [Node.js](https://nodejs.org/en/) and NPM installed. The current Long Term Support (LTS) release is an ideal starting point.
