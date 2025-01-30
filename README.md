@@ -29,4 +29,4 @@ Before you start, make sure you have a fresh version of [Node.js](https://nodejs
     npm run build
     ```
 
-    This will place all files needed for deployment into the `/dist` directory.
+    This will place all files needed for deployment into the `/docs` directory.
