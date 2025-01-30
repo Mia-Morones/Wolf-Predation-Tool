@@ -1,19 +1,32 @@
-# React-Redux-ArcGIS Boilerplate
+# Wolf Predation App
 
-## Maintaining `@arcgis/core` and `@esri/calcite-components-react` Dependencies
+## Getting Started
+Before you start, make sure you have a fresh version of [Node.js](https://nodejs.org/en/) and NPM installed. The current Long Term Support (LTS) release is an ideal starting point.
 
-### Updating the CSS Link for `@arcgis/core`
+1. Fork this repository and clone your own fork to your computer: 
+    ```sh
+    git clone https://github.com/YOUR_USERNAME/react-redux-boilerplate.git
+    ```
 
-When updating `@arcgis/core`, ensure that the main CSS file is updated in `./src/styles/index.css` via the CDN link to reduce the final bundle size.
 
-```css
-@import 'https://js.arcgis.com/4.31/@arcgis/core/assets/esri/themes/dark/main.css';
-```
+2. From the project's root directory, install the required packages (dependencies):
 
-### Make sure update `Calcite-Components` related assets
+    ```sh
+    npm install
+    ```
 
-The `./src/components/calcite-components/index.ts` file contains a function call that loads Calcite-related assets from the CDN:
+3. To run and test the app on your local machine (http://localhost:8080):
 
-```js
-setAssetPath('https://js.arcgis.com/calcite-components/2.13.2/assets');
-```
+    ```sh
+    npm run start
+    ```
+
+    This will start a server instance and begin listening for connections from localhost on port `8080`.
+
+4. To build/deploye the app, you can run:
+
+    ```sh
+    npm run build
+    ```
+
+    This will place all files needed for deployment into the `/dist` directory.
