@@ -30,3 +30,36 @@ Before you start, make sure you have a fresh version of [Node.js](https://nodejs
     ```
 
     This will place all files needed for deployment into the `/docs` directory.
+
+## Project Structure
+
+```sh
+├── public  
+    ├── favicon.ico
+    ├── index.html              # html template for the app
+    ├── thumbnail.jpg           # an image will be used in og:image meta tag
+├── src                         # Source code.
+    ├── components              # React components
+    ├── constants               # app-wide constants (text, URLs, themes and etc)
+    ├── contexts                # React contexts
+    ├── hooks                   # reusable custom hooks
+    ├── pages                   # Page components
+    ├── services                # API calls
+    ├── static                  # static assets
+    ├── store                   # Redux store
+        ├── configureStore.ts   # configure the app's redux store
+        ├── getPreloadedState.ts 
+        ├── rootReducers.ts     # combine reducers from all slices
+    ├── styles                  # app-wide styles
+    ├── types                   # type definitions
+    ├── utils                   # utility functions
+    └── index.tsx               # entry point for the app
+├── .babelrc                    # Babel configuration
+├── .eslintrc.js                # ESLint configuration
+├── .prettierrc.js              # Prettier configuration
+├── tsconfig.json               # TypeScript configuration
+├── webpack.config.js           # Webpack configurations
+├── tailwind.config.js          # Tailwind CSS configurations
+├── postcss.config.js           # PostCSS configurations
+├── meta.config.js              # meta tags configuration
+```
