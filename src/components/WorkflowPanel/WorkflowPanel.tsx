@@ -1,21 +1,74 @@
+import React, { useState } from 'react';
 import {
     CalciteStepper,
     CalciteStepperItem,
 } from '@esri/calcite-components-react';
-import React from 'react';
 import { LocationSelector } from './Step1-LocationSelector/LocationSelector';
 import { RiskAdjustments } from './Step2-RiskAdjustments/RiskAdjustments';
 import { QuizAboutOperation } from './Step3-QuizAboutOperation/QuizAboutOperation';
 import { ValueOfDamage } from './Step4-ValueOfDamage/ValueOfDamage';
-import { CostAdjustment } from './Step5-CostAdjustment/CostAdjustment';
+import PracticeSelection from './Step5.1-PracticeSelection/PracticeSelection';
+import PracticeDetails from './Step5.2-PracticeDetails/PracticeDetails';
+import CostAdjustments from './Step5.3-CostAdjustments/CostAdjustments';
 import { BenefitsAndResults } from './Step6-BenefitsAndResults/BenefitsAndResults';
+
+// Define the correct type for responses
+type Responses = {
+    turboFladryMiles: number;
+    electrifiedNightPenningFeet: number;
+    electrifiedNightPenningMonths: number;
+    rangeRiders: number;
+    carcassesToCompost: number;
+    livestockGuardianDogs: number;
+    foxLights: number;
+    solarSoundAlarms: number;
+    gameCameras: number;
+};
 
 export const StepperContentContainerClasses =
     'p-2 text-theme-foreground text-sm';
 
 export const WorkflowPanel = () => {
+    // Step 5.1: Manage selected practices and devices state
+    const [selectedPractices, setSelectedPractices] = useState<{
+        practices: string[];
+        devices: string[];
+    }>({
+        practices: [],
+        devices: [],
+    });
+
+    // Step 5.2: Manage user input responses for practices and devices
+    const [responses, setResponses] = useState<Responses>({
+        turboFladryMiles: 0,
+        electrifiedNightPenningFeet: 0, // Add electrifiedNightPenningFeet
+        electrifiedNightPenningMonths: 0, // Add electrifiedNightPenningMonths
+        rangeRiders: 0,
+        carcassesToCompost: 0,
+        livestockGuardianDogs: 0,
+        foxLights: 0,
+        solarSoundAlarms: 0,
+        gameCameras: 0,
+    });
+
+    // Function to update selected practices and devices
+    const handleSelectionChange = (
+        selectedItems: string[],
+        type: 'practices' | 'devices'
+    ) => {
+        setSelectedPractices((prev) => ({
+            ...prev,
+            [type]: selectedItems,
+        }));
+    };
+
+    // Function to update responses in step 5.2
+    const handleResponseChange = (newResponses: Responses) => {
+        setResponses(newResponses);
+    };
+
     return (
-        <div className=" w-full h-full overflow-y-auto">
+        <div className="w-full h-full overflow-y-auto">
             <CalciteStepper layout="vertical" icon>
                 <CalciteStepperItem heading="Step 1: Select a location">
                     <LocationSelector />
@@ -33,8 +86,27 @@ export const WorkflowPanel = () => {
                     <ValueOfDamage />
                 </CalciteStepperItem>
 
-                <CalciteStepperItem heading="Step 5: Cost Adjustment">
-                    <CostAdjustment />
+                {/* Step 5.1: Pass handleSelectionChange to PracticeSelection */}
+                <CalciteStepperItem heading="Step 5.1: Practice Selection">
+                    <PracticeSelection
+                        handleSelectionChange={handleSelectionChange}
+                    />
+                </CalciteStepperItem>
+
+                {/* Step 5.2: Pass selectedPractices and handleResponseChange to PracticeDetails */}
+                <CalciteStepperItem heading="Step 5.2: Practice Details">
+                    <PracticeDetails
+                        selectedPractices={selectedPractices}
+                        handleResponseChange={handleResponseChange}
+                    />
+                </CalciteStepperItem>
+
+                {/* Step 5.3: Pass selectedPractices and responses to CostAdjustments */}
+                <CalciteStepperItem heading="Step 5.3: Cost Adjustments">
+                    <CostAdjustments
+                        selectedPractices={selectedPractices}
+                        responses={responses}
+                    />
                 </CalciteStepperItem>
 
                 <CalciteStepperItem heading="Step 6: Benefit Analysis">

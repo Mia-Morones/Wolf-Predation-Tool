@@ -27,19 +27,17 @@ export const TopBanner = () => {
 
                 <div className="max-w-[990px] text-center mx-auto text-shadow text-white my-16 text-xl">
                     <p className="mb-8">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Praesentium voluptatem illo distinctio, obcaecati itaque
-                        expedita sapiente pariatur explicabo. Deserunt fugiat
-                        eveniet dolore quia, ut officiis alias labore
-                        voluptatum. Magni, assumenda!
+                        This tool provides information about the economic
+                        feasibility of non-lethal wolf conflict reduction
+                        practices and devices, and it is tailored to an
+                        individual livestock property. You can estimate the
+                        probability of wolf conflict and estimate expected costs
+                        of livestock loss as compared to the cost of mitigation.
                     </p>
 
                     <p>
-                        Lorem ipsum dolor sit, amet consectetur adipisicing
-                        elit. Placeat in inventore nostrum, vero reprehenderit
-                        nihil debitis magnam incidunt culpa accusamus rerum eius
-                        tenetur nam laborum ex deserunt. Reprehenderit, quae
-                        excepturi.
+                        Note: Analysis from this decision tool are estimates and
+                        may vary from actual conditions.
                     </p>
                 </div>
 

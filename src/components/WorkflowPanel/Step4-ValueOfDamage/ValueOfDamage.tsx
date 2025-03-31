@@ -24,7 +24,7 @@ type TableProps = {
     costOnChange: (value: number) => void;
 };
 
-// const LIVESTOCKS = ['calves', 'lambs', 'yearlings', 'ewes', 'cows', 'rams'];
+// const LIVESTOCKS = ['Calves', 'lambs', 'yearlings', 'ewes', 'cows', 'rams'];
 
 const Table: FC<TableProps> = ({
     livestock,

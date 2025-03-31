@@ -7,10 +7,13 @@ export const AboutPage = () => {
             <AppHeader />
 
             <div className=" container my-12">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio
-                accusamus aliquam fugit amet voluptates aspernatur numquam
-                officia cumque eius expedita. Aperiam, nostrum facere eaque at
-                omnis numquam. Sit, atque nisi.
+                This tool provides information about the economic feasibility of
+                non-lethal wolf conflict reduction practices and devices, and it
+                is tailored to an individual livestock property. You can
+                estimate the probability of wolf conflict and estimate expected
+                costs of livestock loss as compared to the cost of mitigation.
+                Note: Analysis from this decision tool are estimates and may
+                vary from actual conditions.
             </div>
         </div>
     );

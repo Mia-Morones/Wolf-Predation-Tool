@@ -1,0 +1,106 @@
+/* General container styles */
+.selection-container {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Title styles */
+h3 {
+  font-size: 1.2rem;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Grid container to arrange practices and devices side by side */
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two equal columns */
+  gap: 20px;
+}
+
+/* Category (Practices/Devices) container styles */
+.category {
+  padding: 15px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Header for practices and devices */
+h4 {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+/* Options container (for checkboxes) */
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Individual option (checkbox item) styling */
+.option-item {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  color: #555;
+}
+
+.option-item label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Checkbox input styling */
+input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+  .grid-container {
+    grid-template-columns: 1fr; /* Stacks columns on smaller screens */
+  }
+
+  .selection-container {
+    padding: 15px;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  

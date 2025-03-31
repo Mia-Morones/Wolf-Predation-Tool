@@ -50,14 +50,25 @@ export const QuizAboutOperation = () => {
 
             {LIVESTOCKS.map((livestock, index) => {
                 const value = herdSizeByLivestock[livestock];
+
+                // Set the appropriate term for the group (herd vs flock)
+                const isHerd = ['calves', 'yearlings', 'cows'].includes(
+                    livestock
+                );
+                const groupTerm = isHerd ? 'herd' : 'flock';
+
+                // Custom message for each livestock type
+                const questionText = `Approximately how many ${livestock} are present in your ${groupTerm}?`;
+
                 return (
                     <div
                         key={livestock}
                         className="mb-6 grid grid-cols-2 gap-2 items-center"
                     >
                         <h4>
-                            What is the approximate size of your {livestock}{' '}
-                            herd?
+                            Approximately how many {livestock} are present in
+                            your {groupTerm}
+                            {''}?
                         </h4>
                         <CalciteInputNumber
                             placeholder={`${livestock} size`}

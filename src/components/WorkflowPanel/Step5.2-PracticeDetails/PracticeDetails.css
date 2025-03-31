@@ -1,0 +1,77 @@
+/* General styling for practice and device sections */
+.practice-section {
+    margin: 1.5rem 0;
+    padding: 1.5rem;
+    border: 2px solid #007ac2;
+    border-radius: 8px;
+    background-color: #f5faff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Header styling for each practice or device section */
+  .practice-header {
+    font-size: 1rem;                /* Adjust size for prominence */
+    font-weight: bold;                /* Ensure bold header text */
+    color: #00080c;                   /* Consistent color scheme */
+    margin-bottom: 0.5rem;              /* Space below the header */
+    text-align: left;               /* Center align the header */
+    text-transform: capitalize;        /* capitalize for better visibility */
+    letter-spacing: 1px;              /* Slight letter spacing for a cleaner look */
+  }
+  
+  /* Styling for each question label */
+  .question-label {
+    display: block;
+    margin: 0.75rem 0;
+    font-weight: 600;                 /* Semi-bold for better readability */
+    color: #333;                     /* Dark color for better contrast */
+    font-size: 1rem;                 /* Maintain consistency with input text size */
+  }
+  
+  /* Input and select styling for a consistent look */
+  input,
+  select,
+  calcite-input-number {
+    margin-left: 0.5rem;
+    padding: 0.25rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    font-size: 1rem;                 /* Standard input font size */
+    width: 100%;
+    max-width: 300px;                /* Limit width for better form layout */
+    box-sizing: border-box;          /* Ensure padding doesn't affect overall width */
+  }
+  
+  /* Improve spacing between input fields and labels */
+  label {
+    margin-bottom: 0.5rem;
+    display: block;                  /* Ensure labels are block-level */
+  }
+  
+  /* Styling for select dropdown */
+  select {
+    padding: 0.5rem;
+    font-size: 1rem;                 /* Consistent font size for dropdown */
+  }
+  
+  /* Style for buttons (if any) */
+  button {
+    margin-top: 1rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: bold;               /* Bold button text for emphasis */
+    color: #fff;
+    background-color: #007ac2;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+  }
+  
+  button:hover {
+    background-color: #005f8c;      /* Darker shade for hover effect */
+  }
+  
+  
+  

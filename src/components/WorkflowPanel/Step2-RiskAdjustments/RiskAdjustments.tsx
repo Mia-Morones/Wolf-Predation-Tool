@@ -19,10 +19,10 @@ export const RiskAdjustments = () => {
 
             <p className="mb-4">
                 Every operation has its own unique characteristics, and our risk
-                probability model cannot fully account these local effects.
+                probability model cannot fully account for these local effects.
                 Although researchers have yet to identify the exact impact of
                 local effects, we list below some of the factors that COULD
-                increase your chances of a realizing a conflict so that you can
+                increase your chances of realizing a conflict so that you can
                 override our estimates if you choose. We will show you results
                 based on our estimate and yours.
             </p>
