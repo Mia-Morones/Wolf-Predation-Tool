@@ -14,122 +14,146 @@
  */
 
 import React, { useEffect, useState, useRef } from 'react';
+import classNames from 'classnames';
 
 import ArcGISMapView from '@arcgis/core/views/MapView';
 import WebMap from '@arcgis/core/WebMap';
 import TileInfo from '@arcgis/core/layers/support/TileInfo';
-import classNames from 'classnames';
+import GeoJSONLayer from '@arcgis/core/layers/GeoJSONLayer';
 
 interface Props {
-    /**
-     * ArcGIS Online Item Id
-     */
-    webmapId: string;
-    /**
-     * Coordinate pair `[longitude, latitude]` that represent the default center of the map view
-     */
-    center?: number[];
-    /**
-     * deafult zoom level
-     */
-    zoom?: number;
-    /**
-     * Children Elements that will receive Map View as prop
-     */
-    children?: React.ReactNode;
+  webmapId: string;
+  center?: number[];
+  zoom?: number;
+  children?: React.ReactNode;
 }
 
 const MapView: React.FC<Props> = ({
-    webmapId,
-    center,
-    zoom,
-    children,
+  webmapId,
+  center,
+  zoom,
+  children,
 }: Props) => {
-    const mapDivRef = useRef<HTMLDivElement>();
+  const mapDivRef = useRef<HTMLDivElement>(null);
+  const [mapView, setMapView] = useState<ArcGISMapView | null>(null);
+  const mapViewRef = useRef<ArcGISMapView | null>(null);
 
-    const [mapView, setMapView] = useState<ArcGISMapView>(null);
+  const initMapView = async () => {
+    const map = new WebMap({
+      portalItem: {
+        id: webmapId,
+      },
+    });
 
-    const mapViewRef = useRef<ArcGISMapView>();
+    const view = new ArcGISMapView({
+      container: mapDivRef.current as HTMLDivElement,
+      center,
+      zoom,
+      map,
+      constraints: {
+        lods: TileInfo.create().lods,
+        snapToZoom: false,
+      },
+      popupEnabled: false,
+    });
 
-    const initMapView = async () => {
-        mapViewRef.current = new ArcGISMapView({
-            container: mapDivRef.current,
-            center,
-            zoom,
-            map: new WebMap({
-                portalItem: {
-                    id: webmapId,
-                },
-            }),
-            constraints: {
-                lods: TileInfo.create().lods,
-                snapToZoom: false,
+    setMapView(view);
+    mapViewRef.current = view;
+
+    view.when(() => {
+      // 🚫 REMOVE OLD HEX LAYER IF PRESENT
+      const oldHexLayer = map.layers.find(
+        (layer) => layer.title === 'Old Hex Layer Name' // <-- 🔁 Replace this with exact old layer title
+      );
+      if (oldHexLayer) {
+        map.remove(oldHexLayer);
+      }
+
+      // ✅ ADD NEW GEOJSON LAYER
+      const hexLayer = new GeoJSONLayer({
+        url: './data/Hex_updated.geojson',
+        title: 'Prediction Statistics',
+        popupTemplate: {
+          title: 'Prediction Statistics',
+          content: `
+            <strong>Mean:</strong> {MEAN}<br/>
+            <strong>Std Dev:</strong> {STD}<br/>
+            <strong>Variance:</strong> {VARIANCE}<br/>
+            <strong>Mode:</strong> {MODE}<br/>
+            <strong>Skewness:</strong> {SKEWNESS}
+          `,
+        },
+        renderer: {
+          type: 'simple', // @ts-ignore
+          symbol: {
+            type: 'simple-fill',
+            color: 'transparent',
+            outline: { color: 'white', width: 0.5 },
+          },
+          visualVariables: [
+            {
+              type: 'color',
+              field: 'MEAN',
+              stops: [
+                { value: 0, color: '#f2f0f7' },
+                { value: 20, color: '#dadaeb' },
+                { value: 40, color: '#bcbddc' },
+                { value: 60, color: '#9e9ac8' },
+                { value: 80, color: '#756bb1' },
+                { value: 100, color: '#54278f' },
+              ],
             },
-            popupEnabled: false,
-            // padding: {
-            //     right: 400,
-            // },
-        });
+          ],
+        } as any,
+      });
 
-        mapViewRef.current.when(() => {
-            setMapView(mapViewRef.current);
-        });
+      map.add(hexLayer);
+
+      hexLayer.when(() => {
+        view.goTo(hexLayer.fullExtent);
+      });
+    });
+  };
+
+  useEffect(() => {
+    initMapView();
+
+    return () => {
+      mapViewRef.current?.destroy();
     };
+  }, []);
 
-    useEffect(() => {
-        // loadCss();
-        initMapView();
+  useEffect(() => {
+    if (!mapView || !center || !zoom) return;
 
-        return () => {
-            mapViewRef.current.destroy();
-        };
-    }, []);
+    const [longitude, latitude] = center;
 
-    useEffect(() => {
-        if (!mapView) {
-            return;
-        }
+    if (
+      mapView.center.longitude.toFixed(6) === longitude.toFixed(6) &&
+      mapView.center.latitude.toFixed(6) === latitude.toFixed(6) &&
+      mapView.zoom.toFixed(3) === zoom.toFixed(3)
+    ) {
+      return;
+    }
 
-        const [longitude, latitude] = center;
+    mapView.goTo({ center, zoom });
+  }, [center, zoom, mapView]);
 
-        if (
-            mapView.center.longitude.toFixed(6) === longitude.toFixed(6) &&
-            mapView.center.latitude.toFixed(6) === latitude.toFixed(6) &&
-            mapView.zoom.toFixed(3) === zoom.toFixed(3)
-        ) {
-            return;
-        }
-
-        mapView.goTo({
-            center,
-            zoom,
-        });
-    }, [center, zoom]);
-
-    return (
-        <>
-            <div
-                className={classNames('absolute top-0 left-0 w-full bottom-0', {
-                    // 'cursor-none': showMagnifier,
-                })}
-                ref={mapDivRef}
-            ></div>
-            {mapView
-                ? React.Children.map(children, (child) => {
-                      if (!child) {
-                          return null;
-                      }
-
-                      return React.cloneElement(
-                          child as React.ReactElement<any>,
-                          {
-                              mapView,
-                          }
-                      );
-                  })
-                : null}
-        </>
-    );
+  return (
+    <>
+      <div
+        className={classNames('absolute top-0 left-0 w-full bottom-0')}
+        ref={mapDivRef}
+      ></div>
+      {mapView &&
+        React.Children.map(children, (child) => {
+          if (!child) return null;
+          return React.cloneElement(child as React.ReactElement<any>, {
+            mapView,
+          });
+        })}
+    </>
+  );
 };
 
 export default MapView;
