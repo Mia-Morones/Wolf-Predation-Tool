@@ -4,12 +4,15 @@
   "description": "Start React+Redux+@arcgis/core project with TypeScript in an easier and faster way",
   "title": "Wolf Livestock Conflict Calculator",
   "main": "index.js",
+  "homepage": "https://RezaGoljaniA.github.io/wolf-predation-app",
   "scripts": {
     "test": "jest --passWithNoTests",
     "start": "webpack serve --mode development --open",
     "dev": "webpack --mode development",
     "build": "webpack --mode production",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "lint-staged": {
     "src/**/*.{ts,tsx,json}": [
@@ -20,15 +23,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vannizhang/react-redux-arcgis-boilerplate.git"
+    "url": "git+https://github.com/RezaGoljaniA/wolf-predation-app.git"
   },
   "keywords": [],
-  "author": "Jinnan Zhang",
+  "author": "Reza Goljani Amirkhiz",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/vannizhang/react-redux-arcgis-boilerplate/issues"
+    "url": "https://github.com/RezaGoljaniA/wolf-predation-app/issues"
   },
-  "homepage": "https://github.com/vannizhang/react-redux-arcgis-boilerplate",
   "devDependencies": {
     "@babel/core": "7.25",
     "@babel/plugin-transform-runtime": "^7.11.5",
@@ -85,6 +87,7 @@
     "@types/react": "^18.0.9",
     "@types/react-dom": "^18.0.5",
     "classnames": "^2.2.6",
+    "gh-pages": "^6.3.0",
     "helper-toolkit-ts": "^1.1.13",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
