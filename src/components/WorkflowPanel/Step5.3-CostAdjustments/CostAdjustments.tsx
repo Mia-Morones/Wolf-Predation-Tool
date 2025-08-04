@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { CalciteInputNumber } from '@esri/calcite-components-react';
+import { useDispatch } from 'react-redux';
+import { totalMitigationCostChanged } from '@store/WolfPredation/reducer';
+
 
 type BudgetData = {
     [key: string]: {
@@ -15,14 +18,14 @@ type BudgetData = {
 };
 
 const budgetData: BudgetData = {
-    'Turbo Fladry': { annualCost: 500, costPerMile: 50 },
-    'Electrified Night Penning': { annualCost: 372.73 }, // Fixed cost of night penning
+    'Turbo Fladry': { annualCost: 1388.15, costPerMile: 1388.15 },
+    'Electrified Night Penning': { annualCost: 330.21 }, // Fixed cost of night penning
     'Range Riding': { annualCost: 300, costPerRider: 30 },
-    'Carcass Composting': { annualCost: 200, costPerCarcass: 20 },
+    'Carcass Composting': { annualCost: 280.64 },
     'Livestock Guardian Dog': { annualCost: 2464.18, costPerDog: 20 },
-    'Fox Light': { annualCost: 100, costPerLight: 10 },
-    'Solar Sound Alarm': { annualCost: 120, costPerAlarm: 15 },
-    'Game Camera': { annualCost: 150, costPerCamera: 20 },
+    'Fox Light': { annualCost: 24.78, costPerLight: 24.78 },
+    'Solar Sound Alarm': { annualCost: 7.41, costPerAlarm: 7.41 },
+    'Game Camera': { annualCost: 21.34, costPerCamera: 21.34 },
 };
 
 type CostAdjustmentProps = {
@@ -32,14 +35,21 @@ type CostAdjustmentProps = {
     };
     responses: {
         turboFladryMiles: number;
-        electrifiedNightPenningFeet: number; // Added feet for calculating rolls of fencing
-        electrifiedNightPenningMonths: number; // Added months for calculating the total cost
-        rangeRiders: number;
+        electrifiedNightPenningFeet: number; 
+        electrifiedNightPenningMonths: number; 
         carcassesToCompost: number;
         livestockGuardianDogs: number;
         foxLights: number;
         solarSoundAlarms: number;
         gameCameras: number;
+        hoursPerWeek: number;
+        rangeRidingMonths: number;
+        transportationMethod: 'Horse' | 'ATV/UTV';
+        numberOfTransport: number;
+        milesFromOperation: number;
+        rangeRidingRuggedTerrain: boolean;
+        turboFladryRockyTerrain: boolean;
+        turboFladrySnowMachine: boolean;
     };
 };
 
@@ -50,7 +60,7 @@ const CostAdjustment: React.FC<CostAdjustmentProps> = ({
     const [adjustedCosts, setAdjustedCosts] = useState<{
         [key: string]: number;
     }>({});
-    const [showBudgetSheet, setShowBudgetSheet] = useState(false); // State to show the budget sheet image
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const updatedCosts: { [key: string]: number } = {};
@@ -61,27 +71,75 @@ const CostAdjustment: React.FC<CostAdjustmentProps> = ({
                 let adjustedCost = practiceData.annualCost;
 
                 if (practice === 'Turbo Fladry') {
-                    adjustedCost +=
-                        responses.turboFladryMiles * practiceData.costPerMile!;
-                } else if (practice === 'Electrified Night Penning') {
-                    // Fixed cost
-                    adjustedCost = practiceData.annualCost; // Start with the fixed cost of $372.73
+                    const miles = responses.turboFladryMiles || 0;
+                    const materialCostPerMile = 1388.15;
+                    let baseInstall = 400;
+                    const maintenance = 400;
 
-                    // Calculate variable costs based on user inputs
+                    const extraMiles = Math.max(0, Math.floor(miles - 1));
+                    baseInstall += extraMiles * 100;
+
+                    const ruggedMultiplier = 
+                        (responses as any).turboFladryRockyTerrain === true ? 1.2 : 1;
+                    const laborCost = (baseInstall + maintenance) * ruggedMultiplier;
+
+                    const equipmentCostPerMile =
+                        (responses as any).turboFladrySnowMachine === true ? 2.2 : 15.9;
+
+                    const materialAndEquipmentCost = miles * (materialCostPerMile + equipmentCostPerMile);
+
+                    adjustedCost = laborCost + materialAndEquipmentCost;
+                } else if (practice === 'Electrified Night Penning') {
+                    adjustedCost = practiceData.annualCost;
+
                     const monthCost =
-                        20 * 4 * responses.electrifiedNightPenningMonths; // $20 * 4 * months
+                        20 * 4 * responses.electrifiedNightPenningMonths;
                     const rollCost =
                         Math.ceil(responses.electrifiedNightPenningFeet / 164) *
-                        64.86; // Calculate rolls based on feet
+                        64.86;
 
-                    adjustedCost += monthCost + rollCost; // Add both variable costs to the base cost
-                } else if (practice === 'Range Riding') {
-                    adjustedCost +=
-                        responses.rangeRiders * practiceData.costPerRider!;
+                    adjustedCost += monthCost + rollCost;
+                 } else if (practice === 'Range Riding') {
+    const months = responses.rangeRidingMonths || 0;
+    const hoursPerWeek = responses.hoursPerWeek || 0;
+    const numberOfTransport = responses.numberOfTransport || 0;
+    const transportation = responses.transportationMethod || 'Horse';
+    const milesFromOperation = responses.milesFromOperation || 0;
+    const rugged = responses.rangeRidingRuggedTerrain === true;
+
+    const fixedCost = 54.40;
+    const cellPhoneCost = months * 40;
+
+    let totalHours = hoursPerWeek * 4 * months;
+    if (rugged) {
+        totalHours *= 1.2;
+    }
+
+    const laborCost = totalHours * 30;
+
+    let transportCost = 0;
+    if (transportation === 'ATV/UTV') {
+        transportCost = numberOfTransport * 21.12;
+    } else {
+        transportCost = numberOfTransport * 1440;
+    }
+
+    const weeks = months * 4;
+
+    const pickupMileageCost =
+        (2 * milesFromOperation) * weeks * (hoursPerWeek / 10) * 0.67;
+
+    const trailerMiles =
+        (2 * milesFromOperation) * weeks * (hoursPerWeek / 10);
+    const trailerCost = (2 / 3) * trailerMiles * 0.25;
+
+    adjustedCost = fixedCost + cellPhoneCost + laborCost + pickupMileageCost + trailerCost + transportCost;
+
+
                 } else if (practice === 'Carcass Composting') {
-                    adjustedCost +=
+                    adjustedCost =
                         responses.carcassesToCompost *
-                        practiceData.costPerCarcass!;
+                        practiceData.annualCost!;
                 } else if (practice === 'Livestock Guardian Dog') {
                     adjustedCost +=
                         responses.livestockGuardianDogs *
@@ -95,17 +153,24 @@ const CostAdjustment: React.FC<CostAdjustmentProps> = ({
         selectedPractices.devices.forEach((device) => {
             const deviceData = budgetData[device];
             if (deviceData) {
-                let adjustedCost = deviceData.annualCost;
+                let adjustedCost = 0;
 
-                if (device === 'Fox Light') {
-                    adjustedCost +=
-                        responses.foxLights * deviceData.costPerLight!;
-                } else if (device === 'Solar Sound Alarm') {
-                    adjustedCost +=
-                        responses.solarSoundAlarms * deviceData.costPerAlarm!;
-                } else if (device === 'Game Camera') {
-                    adjustedCost +=
-                        responses.gameCameras * deviceData.costPerCamera!;
+                const deviceQuantityMap: { [key: string]: number } = {
+                    'Fox Light': responses.foxLights,
+                    'Solar Sound Alarm': responses.solarSoundAlarms,
+                    'Game Camera': responses.gameCameras,
+                };
+
+                const quantity = deviceQuantityMap[device] || 0;
+
+                if (device === 'Fox Light' && deviceData.costPerLight) {
+                    adjustedCost = quantity * deviceData.costPerLight;
+                } else if (device === 'Solar Sound Alarm' && deviceData.costPerAlarm) {
+                    adjustedCost = quantity * deviceData.costPerAlarm;
+                } else if (device === 'Game Camera' && deviceData.costPerCamera) {
+                    adjustedCost = quantity * deviceData.costPerCamera;
+                } else {
+                    adjustedCost = deviceData.annualCost;
                 }
 
                 updatedCosts[device] = adjustedCost;
@@ -113,22 +178,33 @@ const CostAdjustment: React.FC<CostAdjustmentProps> = ({
         });
 
         setAdjustedCosts(updatedCosts);
+        dispatch(totalMitigationCostChanged(
+            Object.values(updatedCosts).reduce((total, cost) => total + cost, 0)
+        ));
     }, [selectedPractices, responses]);
 
+    // **The handleInputChange function**
     const handleInputChange = (
         e: CustomEvent, // CustomEvent for Calcite Input
         key: string
     ) => {
         const inputElement = e.target as HTMLCalciteInputNumberElement; // Correct type casting
         const value = parseFloat(inputElement.value); // Parse as float
-        setAdjustedCosts((prev) => ({
-            ...prev,
-            [key]: value,
-        }));
-    };
 
-    const handleMoreInfoClick = () => {
-        setShowBudgetSheet(!showBudgetSheet); // Toggle the budget sheet visibility
+        setAdjustedCosts((prev) => {
+            const newCosts = {
+                ...prev,
+                [key]: value,
+            };
+
+            dispatch(
+                totalMitigationCostChanged(
+                    Object.values(newCosts).reduce((total, cost) => total + cost, 0)
+                )
+            );
+
+            return newCosts;
+        });
     };
 
     return (
@@ -158,7 +234,7 @@ const CostAdjustment: React.FC<CostAdjustmentProps> = ({
                                     value={adjustedCosts[key].toString()} // Ensure the value is a string
                                     onCalciteInputNumberChange={(e) =>
                                         handleInputChange(e, key)
-                                    } // Pass the key to the handler
+                                    }
                                     min={0}
                                     step={10}
                                 />
@@ -176,51 +252,10 @@ const CostAdjustment: React.FC<CostAdjustmentProps> = ({
                         .toFixed(2)}
                 </h4>
             </div>
-
-            {/* Button to show more information */}
-            <button onClick={handleMoreInfoClick}>
-                For more information on how we came to these costs, click here
-            </button>
-
-            {/* Conditionally render the budget sheet image if "Livestock Guardian Dog" is selected */}
-            {showBudgetSheet &&
-                selectedPractices.practices.includes(
-                    'Livestock Guardian Dog'
-                ) && (
-                    <div style={{ marginTop: '30px' }}>
-                        <h5>Livestock Guardian Dog Budget</h5>
-                        <img
-                            src="/BudgetSheets/livestock_guardian_dog_budget_sheet.jpg" // Direct path from the public folder
-                            alt="Livestock Guardian Dog Budget"
-                            style={{
-                                width: '100%',
-                                maxWidth: '600px',
-                                marginBottom: '20px',
-                            }}
-                        />
-                    </div>
-                )}
-
-            {/* Conditionally render the Electrified Night Penning Budget Sheet */}
-            {showBudgetSheet &&
-                selectedPractices.practices.includes(
-                    'Electrified Night Penning'
-                ) && (
-                    <div style={{ marginTop: '30px' }}>
-                        <h5>Electrified Night Penning Budget</h5>
-                        <img
-                            src="/BudgetSheets/electrified_night_penning_budget_sheet.jpg" // Direct path from the public folder
-                            alt="Electrified Night Penning Budget"
-                            style={{
-                                width: '100%',
-                                maxWidth: '600px',
-                                marginBottom: '20px',
-                            }}
-                        />
-                    </div>
-                )}
         </div>
     );
 };
 
 export default CostAdjustment;
+
+

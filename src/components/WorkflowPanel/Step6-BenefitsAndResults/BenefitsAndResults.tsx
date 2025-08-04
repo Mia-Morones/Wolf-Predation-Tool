@@ -1,184 +1,107 @@
 import React, { useMemo } from 'react';
-import { StepperContentContainerClasses } from '../WorkflowPanel';
-import { useRoundedConflictProbability } from '@hooks/useRoundedConflictProbability';
 import { useSelector } from 'react-redux';
 import {
-    selectCarcassCompostingCost,
-    selectLivestockHandlingCost,
+    selectWolfCattleConflictProbability,
     selectLivestockHerdSize,
     selectLivestockMarketValue,
-    selectMilesOfTurboFladry,
-    selectNumberOfRangeRiders,
-    selectWolfCattleConflictProbability,
+    selectLivestockHandlingCost,
+    selectTotalMitigationCost,
 } from '@store/WolfPredation/selectors';
 import { LIVESTOCKS } from '@store/WolfPredation/reducer';
+import { StepperContentContainerClasses } from '../WorkflowPanel';
 
-const COST_TURBO_FLADRY_PER_MILE = 4000;
+interface BenefitsAndResultsProps {
+    userConflictProbability: number | null;
+}
 
-/**
- * As of December 2024, the average hourly wage for a Range Rider in Colorado is approximately $19.01,
- * equating to an annual salary of about $39,540, assuming full-time employment
- *
- * @see https://www.ziprecruiter.com/Salaries/Range-Rider-Salary--in-Colorado
- */
-const RANGE_RIDER_SALARY = 40000;
-
-export const BenefitsAndResults = () => {
-    const formattedConflictProbability = useRoundedConflictProbability();
-    const conflictProbability = useSelector(
-        selectWolfCattleConflictProbability
-    );
-
+export const BenefitsAndResults: React.FC<BenefitsAndResultsProps> = ({ userConflictProbability }) => {
+    const modelConflictProbability = useSelector(selectWolfCattleConflictProbability); // decimal (e.g. 0.25)
     const livestockHerdSize = useSelector(selectLivestockHerdSize);
     const livestockMarketValue = useSelector(selectLivestockMarketValue);
     const livestockHandlingCost = useSelector(selectLivestockHandlingCost);
+    const totalMitigationCost = useSelector(selectTotalMitigationCost);
 
-    const milesOfFencing = useSelector(selectMilesOfTurboFladry);
-    const rangeRiders = useSelector(selectNumberOfRangeRiders);
-    const carcassCompostingCost = useSelector(selectCarcassCompostingCost);
+    const totalHerdSize = useMemo(() => {
+        return LIVESTOCKS.reduce((sum, livestock) => sum + (livestockHerdSize[livestock] || 0), 0);
+    }, [livestockHerdSize]);
 
-    /**
-     * Calculates the total market value of all livestock.
-     *
-     * This function calculates the total market value of the livestock based on their herd sizes and market values.
-     * The calculation is performed by iterating over the list of livestocks and summing up the product of the herd size and
-     * market value for each type of livestock.
-     *
-     * @returns {number} The total market value of all livestock.
-     */
-    const totalMarketValue = useMemo(() => {
-        const total = LIVESTOCKS.reduce((acc, livestock) => {
-            return (
-                acc +
-                livestockHerdSize[livestock] * livestockMarketValue[livestock]
-            );
+    const weightedAverageLossPerAnimal = useMemo(() => {
+        if (totalHerdSize === 0) return 0;
+        return LIVESTOCKS.reduce((sum, livestock) => {
+            const herdSize = livestockHerdSize[livestock] || 0;
+            const marketValue = livestockMarketValue[livestock] || 0;
+            const handlingCost = livestockHandlingCost[livestock] || 0;
+            return sum + (herdSize / totalHerdSize) * (marketValue + handlingCost);
         }, 0);
+    }, [totalHerdSize, livestockHerdSize, livestockMarketValue, livestockHandlingCost]);
 
-        return total;
-    }, [livestockHerdSize, livestockMarketValue]);
+    const calculateMetrics = (conflictProb: number) => {
+        const pli = weightedAverageLossPerAnimal * conflictProb;
 
-    /**
-     * Calculates the total handling cost for all livestock.
-     *
-     * This function calculates the  total handling cost of the livestock based on their herd sizes and handling cost.
-     * The calculation is performed by iterating over the list of livestocks and summing up the product of the herd size and
-     * handling cost for each type of livestock.
-     *
-     * @returns {number} The total handling cost for all livestock.
-     */
-    const totalHandlingCost = useMemo(() => {
-        const total = LIVESTOCKS.reduce((acc, livestock) => {
-            return (
-                acc +
-                livestockHerdSize[livestock] * livestockHandlingCost[livestock]
-            );
-        }, 0);
+        const denominator = conflictProb * weightedAverageLossPerAnimal;
+        const breakEvenEfficiency = denominator === 0 ? null : Math.min(1, totalMitigationCost / denominator);
 
-        return total;
-    }, [livestockHerdSize, livestockHandlingCost]);
+        const subsidyEff = (subsidy: number) => {
+            const adjustedCost = totalMitigationCost * (1 - subsidy);
+            return denominator === 0 ? null : Math.min(1, adjustedCost / denominator);
+        };
 
-    /**
-     * Calculates the total potential loss based on the total market value,
-     * total handling cost, and conflict probability.
-     *
-     * @returns {number} The total potential loss.
-     */
-    const totalPotentialLose = useMemo(() => {
-        return (totalMarketValue + totalHandlingCost) * conflictProbability;
-    }, [totalMarketValue, totalHandlingCost, conflictProbability]);
+        return {
+            pli,
+            breakEvenEfficiency,
+            subsidizedEfficiencies: {
+                '25%': subsidyEff(0.25),
+                '50%': subsidyEff(0.5),
+                '100%': subsidyEff(1),
+            },
+        };
+    };
 
-    const totalTurboFladryCost = useMemo(() => {
-        return milesOfFencing * COST_TURBO_FLADRY_PER_MILE;
-    }, [milesOfFencing]);
-
-    const totalRangeRidersCost = useMemo(() => {
-        return rangeRiders * RANGE_RIDER_SALARY;
-    }, [rangeRiders]);
-
-    /**
-     * Calculates the break-even efficiency for the management practices.
-     *
-     * This value represents the efficiency at which the cost of management practices
-     * equals the potential loss. It is calculated as 1 minus the ratio of the total
-     * cost of management practices to the total potential loss.
-     *
-     * @returns {number} The break-even efficiency.
-     */
-    const breakEvenEfficency = useMemo(() => {
-        const costManagementPractice =
-            totalTurboFladryCost + totalRangeRidersCost + carcassCompostingCost;
-
-        if (totalPotentialLose === 0) {
-            return 0;
-        }
-
-        return 1 - costManagementPractice / totalPotentialLose;
-    }, [
-        totalPotentialLose,
-        totalTurboFladryCost,
-        totalRangeRidersCost,
-        carcassCompostingCost,
-    ]);
+    const modelResults = calculateMetrics(modelConflictProbability);
+    const userResults = userConflictProbability !== null
+    ? calculateMetrics(userConflictProbability) // already decimal
+    : null;
 
     return (
         <div className={StepperContentContainerClasses}>
-            <p className="mb-4">
-                Based on your location, there is a{' '}
-                <span className="text-red-500 font-bold">
-                    {formattedConflictProbability}%
-                </span>{' '}
-                mean probability of a wolf conflict/predation occurring.
+            <h3 className="font-bold text-lg mb-2">Model-Estimated Conflict</h3>
+            <p>Conflict Probability: <b>{(modelConflictProbability * 100).toFixed(2)}%</b></p>
+            <p>Weighted Avg. Loss/Animal: <b>${weightedAverageLossPerAnimal.toFixed(2)}</b></p>
+            <p>Potential Lost Income: <b>${modelResults.pli.toFixed(2)}</b></p>
+            <p>Break-Even Efficiency: <b>{modelResults.breakEvenEfficiency !== null ? (modelResults.breakEvenEfficiency * 100).toFixed(2) + '%' : 'N/A'}</b></p>
+            <br />
+            <p>Under the following practice subsidization levels, this is how effective your practice or combination 
+                of practices would need to be in order to offset your costs:
             </p>
-            <p className="mb-4">
-                The total market value is <b>${totalMarketValue.toFixed(0)}</b>,
-                and the the handling cost is <b>${totalHandlingCost}</b>, for a
-                total potential loss of <b>{totalPotentialLose.toFixed(2)}</b>.
-            </p>
-            <p className="mb-4">
-                Your expected loss in any one year is{' '}
-                {conflictProbability.toFixed(2)} x (${totalMarketValue}+$
-                {totalHandlingCost}) ={' '}
-                <span className="font-bold">
-                    ${totalPotentialLose.toFixed(2)}
-                </span>{' '}
-                dollars of lost income.
-            </p>
+            <ul>
+                <li>25% Subsidy: <b>{(modelResults.subsidizedEfficiencies['25%']! * 100).toFixed(2)}%</b></li>
+                <li>50% Subsidy: <b>{(modelResults.subsidizedEfficiencies['50%']! * 100).toFixed(2)}%</b></li>
+                <li>100% Subsidy: <b>{(modelResults.subsidizedEfficiencies['100%']! * 100).toFixed(2)}%</b></li>
+            </ul>
 
-            <p className="mb-4">
-                The average cost of Turbo Fladry per mile is{' '}
-                <b>${COST_TURBO_FLADRY_PER_MILE}</b>, and your total cost of
-                turbo fladry is <b>${totalTurboFladryCost}</b>.
-            </p>
-
-            <p className="mb-4">
-                The average salary of a Range Rider is{' '}
-                <b>${RANGE_RIDER_SALARY}</b>, and your total cost of range
-                riders is <b>${totalRangeRidersCost}</b>.
-            </p>
-
-            <p className="mb-4">
-                The total cost of carcass composting is{' '}
-                <b>${carcassCompostingCost}</b>.
-            </p>
-
-            <div className="mt-2">
-                <h4 className=" text-base font-medium">Results:</h4>
-                <p className="mb-4">
-                    The break-even efficiency represents the efficiency at which
-                    the cost of management practices equals the potential loss.
-                    This value helps to understand how effective a mitigation
-                    practice, or combination of practices, needs to be for the
-                    cost to cover or break even with the potential lost income.
-                    By subtracting the efficiency from one, we get the remaining
-                    probability of predation after accounting for the
-                    effectiveness of the practice.
-                </p>
-
-                <p>
-                    The break-even efficiency is{' '}
-                    <b>{(breakEvenEfficency * 100).toFixed(2)}%</b>
-                </p>
-            </div>
+            {userResults && (
+                <>
+                    <hr className="my-4" />
+                    <h3 className="font-bold text-lg mb-2">User-Adjusted Conflict</h3>
+                    <p>Conflict Probability: <b>{(userConflictProbability * 100).toFixed(2)}%</b></p>
+                    <p>Weighted Avg. Loss/Animal: <b>${weightedAverageLossPerAnimal.toFixed(2)}</b></p>
+                    <p>Potential Lost Income: <b>${userResults.pli.toFixed(2)}</b></p>
+                    <p>Break-Even Efficiency: <b>{userResults.breakEvenEfficiency !== null ? (userResults.breakEvenEfficiency * 100).toFixed(2) + '%' : 'N/A'}</b></p>
+                     <br />
+                    <p>Under the following practice subsidization levels, this is how effective your practice or combination 
+                         of practices would need to be in order to offset your costs:
+                    </p>
+                    <ul>
+                        <li>25% Subsidy: <b>{(userResults.subsidizedEfficiencies['25%']! * 100).toFixed(2)}%</b></li>
+                        <li>50% Subsidy: <b>{(userResults.subsidizedEfficiencies['50%']! * 100).toFixed(2)}%</b></li>
+                        <li>100% Subsidy: <b>{(userResults.subsidizedEfficiencies['100%']! * 100).toFixed(2)}%</b></li>
+                    </ul>
+                </>
+            )}
         </div>
     );
 };
+
+
+
+

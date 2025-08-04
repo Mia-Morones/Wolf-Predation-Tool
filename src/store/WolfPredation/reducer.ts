@@ -77,6 +77,8 @@ export type WolfPredationState = {
      * total cost of carcass composting
      */
     carcassCompostingCost: number;
+
+    totalMitigationCost: number;
 };
 
 export const initialWolfPredationState: WolfPredationState = {
@@ -112,6 +114,7 @@ export const initialWolfPredationState: WolfPredationState = {
     milesOfTurboFladry: 0,
     numberOfRangeRiders: 0,
     carcassCompostingCost: 0,
+    totalMitigationCost: 0,
 };
 const slice = createSlice({
     name: 'WolfPredation',
@@ -180,6 +183,10 @@ const slice = createSlice({
         ) => {
             state.carcassCompostingCost = action.payload;
         },
+        totalMitigationCostChanged: (state, action: PayloadAction<number>) => {
+    state.totalMitigationCost = action.payload;
+        },
+
     },
 });
 const { reducer } = slice;
@@ -195,5 +202,6 @@ export const {
     queryGeomChanged,
     isSketchingChanged,
     queryGeometryTypeChanged,
+    totalMitigationCostChanged,
 } = slice.actions;
 export default reducer;

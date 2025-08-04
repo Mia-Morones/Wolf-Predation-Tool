@@ -11,18 +11,27 @@ import PracticeSelection from './Step5.1-PracticeSelection/PracticeSelection';
 import PracticeDetails from './Step5.2-PracticeDetails/PracticeDetails';
 import CostAdjustments from './Step5.3-CostAdjustments/CostAdjustments';
 import { BenefitsAndResults } from './Step6-BenefitsAndResults/BenefitsAndResults';
+import { defaultResponses } from './Step5.2-PracticeDetails/PracticeDetails';
+
 
 // Define the correct type for responses
 type Responses = {
     turboFladryMiles: number;
     electrifiedNightPenningFeet: number;
     electrifiedNightPenningMonths: number;
-    rangeRiders: number;
     carcassesToCompost: number;
     livestockGuardianDogs: number;
     foxLights: number;
     solarSoundAlarms: number;
     gameCameras: number;
+    turboFladryRockyTerrain: boolean;   
+    turboFladrySnowMachine: boolean;   
+    hoursPerWeek: number;
+    rangeRidingMonths: number;
+    transportationMethod: 'Horse' | 'ATV/UTV';
+    numberOfTransport: number;
+    milesFromOperation: number;
+    rangeRidingRuggedTerrain: boolean;
 };
 
 export const StepperContentContainerClasses =
@@ -39,17 +48,9 @@ export const WorkflowPanel = () => {
     });
 
     // Step 5.2: Manage user input responses for practices and devices
-    const [responses, setResponses] = useState<Responses>({
-        turboFladryMiles: 0,
-        electrifiedNightPenningFeet: 0, // Add electrifiedNightPenningFeet
-        electrifiedNightPenningMonths: 0, // Add electrifiedNightPenningMonths
-        rangeRiders: 0,
-        carcassesToCompost: 0,
-        livestockGuardianDogs: 0,
-        foxLights: 0,
-        solarSoundAlarms: 0,
-        gameCameras: 0,
-    });
+    const [responses, setResponses] = useState<Responses>(defaultResponses);
+
+    const [userConflictProbability, setUserConflictProbability] = useState<number | null>(null);
 
     // Function to update selected practices and devices
     const handleSelectionChange = (
@@ -75,7 +76,11 @@ export const WorkflowPanel = () => {
                 </CalciteStepperItem>
 
                 <CalciteStepperItem heading="Step 2: Risk Adjustments">
-                    <RiskAdjustments />
+                    <RiskAdjustments
+                    userConflictProbability={userConflictProbability}
+                    setUserConflictProbability={setUserConflictProbability}
+                    />
+
                 </CalciteStepperItem>
 
                 <CalciteStepperItem heading="Step 3: Questions about your operation">
@@ -110,7 +115,7 @@ export const WorkflowPanel = () => {
                 </CalciteStepperItem>
 
                 <CalciteStepperItem heading="Step 6: Benefit Analysis">
-                    <BenefitsAndResults />
+                    <BenefitsAndResults userConflictProbability={userConflictProbability} />
                 </CalciteStepperItem>
             </CalciteStepper>
         </div>

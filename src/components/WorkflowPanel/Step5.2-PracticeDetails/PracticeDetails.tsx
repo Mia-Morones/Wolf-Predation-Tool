@@ -7,7 +7,6 @@ interface Responses {
     turboFladryMiles: number;
     electrifiedNightPenningFeet: number;
     electrifiedNightPenningMonths: number;
-    rangeRiders: number;
     carcassesToCompost: number;
     livestockGuardianDogs: number;
     foxLights: number;
@@ -16,8 +15,6 @@ interface Responses {
     turboFladryRockyTerrain: boolean;
     turboFladrySnowMachine: boolean;
     rangeRidingMonths: number;
-    herdSize: string;
-    rangelandAcres: number;
     hoursPerWeek: number;
     transportationMethod: 'Horse' | 'ATV/UTV';
     numberOfTransport: number;
@@ -34,6 +31,25 @@ interface PracticeDetailsProps {
     handleResponseChange: (newResponses: Responses) => void;
 }
 
+export const defaultResponses: Responses = {
+  turboFladryMiles: 0,
+  electrifiedNightPenningFeet: 0,
+  electrifiedNightPenningMonths: 0,
+  carcassesToCompost: 0,
+  livestockGuardianDogs: 0,
+  foxLights: 0,
+  solarSoundAlarms: 0,
+  gameCameras: 0,
+  turboFladryRockyTerrain: false,
+  turboFladrySnowMachine: false,
+  rangeRidingMonths: 0,
+  hoursPerWeek: 0,
+  transportationMethod: 'Horse',
+  numberOfTransport: 0,
+  milesFromOperation: 0,
+  rangeRidingRuggedTerrain: false,
+};
+
 const PracticeDetails: FC<PracticeDetailsProps> = ({
     selectedPractices,
     handleResponseChange,
@@ -42,7 +58,6 @@ const PracticeDetails: FC<PracticeDetailsProps> = ({
         turboFladryMiles: 0,
         electrifiedNightPenningFeet: 0,
         electrifiedNightPenningMonths: 0,
-        rangeRiders: 0,
         carcassesToCompost: 0,
         livestockGuardianDogs: 0,
         foxLights: 0,
@@ -51,8 +66,6 @@ const PracticeDetails: FC<PracticeDetailsProps> = ({
         turboFladryRockyTerrain: false,
         turboFladrySnowMachine: false,
         rangeRidingMonths: 0,
-        herdSize: '',
-        rangelandAcres: 0,
         hoursPerWeek: 0,
         transportationMethod: 'Horse',
         numberOfTransport: 0,
@@ -60,23 +73,30 @@ const PracticeDetails: FC<PracticeDetailsProps> = ({
         rangeRidingRuggedTerrain: false,
     });
 
-    const handleInputChange = (e: CustomEvent, key: keyof Responses) => {
-        const value = parseInt((e.target as HTMLInputElement).value, 10);
-        const newResponses = { ...responses, [key]: value };
-        setResponses(newResponses);
-        handleResponseChange(newResponses);
-    };
-
     const handleDropdownChange = (
-        e: React.ChangeEvent<HTMLSelectElement>,
-        key: keyof Responses
-    ) => {
-        const value = e.target.value;
-        const newResponses = { ...responses, [key]: value };
-        setResponses(newResponses);
-        handleResponseChange(newResponses);
-    };
+    e: React.ChangeEvent<HTMLSelectElement>,
+    key: keyof Responses
+) => {
+    const value = e.target.value;
 
+    const parsedValue =
+        value === 'Yes'
+            ? true
+            : value === 'No'
+            ? false
+            : value; // fallback for string-based fields like "herdSize"
+
+    const newResponses = { ...responses, [key]: parsedValue };
+    setResponses(newResponses);
+    handleResponseChange(newResponses);
+};
+
+    const handleInputChange = (e: CustomEvent, key: keyof Responses) => {
+    const value = parseFloat((e.target as HTMLInputElement).value);
+    const newResponses = { ...responses, [key]: value };
+    setResponses(newResponses);
+    handleResponseChange(newResponses);
+};
     const handleTransportationMethodChange = (
         e: React.ChangeEvent<HTMLSelectElement>
     ) => {
@@ -108,7 +128,7 @@ const PracticeDetails: FC<PracticeDetailsProps> = ({
                                         handleInputChange(e, 'turboFladryMiles')
                                     }
                                     min={0}
-                                    step={1}
+                                    step={0.5}
                                 />
                             </label>
                         </div>
@@ -319,63 +339,6 @@ const PracticeDetails: FC<PracticeDetailsProps> = ({
 
                         <div>
                             <label>
-                                How many range riders do you need?
-                                <CalciteInputNumber
-                                    value={
-                                        responses[
-                                            'rangeRidersNeeded'
-                                        ]?.toString() || '0'
-                                    }
-                                    onCalciteInputNumberChange={(e) =>
-                                        handleInputChange(
-                                            e,
-                                            'rangeRidersNeeded'
-                                        )
-                                    }
-                                    min={0}
-                                    step={1}
-                                />
-                            </label>
-                        </div>
-
-                        <div>
-                            <label>
-                                How large is your herd?
-                                <select
-                                    value={responses['herdSize'] || ''}
-                                    onChange={(e) =>
-                                        handleDropdownChange(e, 'herdSize')
-                                    }
-                                >
-                                    <option value="">Select Herd Size</option>
-                                    <option value="0-100">0-100</option>
-                                    <option value="101-400">101-400</option>
-                                    <option value="401-900">401-900</option>
-                                    <option value="901+">901+</option>
-                                </select>
-                            </label>
-                        </div>
-
-                        <div>
-                            <label>
-                                How many acres is your grazing land?
-                                <CalciteInputNumber
-                                    value={
-                                        responses[
-                                            'rangelandAcres'
-                                        ]?.toString() || '0'
-                                    }
-                                    onCalciteInputNumberChange={(e) =>
-                                        handleInputChange(e, 'rangelandAcres')
-                                    }
-                                    min={0}
-                                    step={1}
-                                />
-                            </label>
-                        </div>
-
-                        <div>
-                            <label>
                                 What method of transportation will be utilized
                                 for range riding?
                                 <select
@@ -486,26 +449,35 @@ const PracticeDetails: FC<PracticeDetailsProps> = ({
         }
     };
 
-    // Render questions specific to devices (Fox Light, Solar Sound Alarm, Game Camera)
-    const renderDeviceQuestions = () => {
-        return selectedPractices.devices.map((device) => (
+    const deviceKeyMap: { [key: string]: string } = {
+    'Fox Light': 'foxLights',
+    'Solar Sound Alarm': 'solarSoundAlarms',
+    'Game Camera': 'gameCameras',
+};
+
+const renderDeviceQuestions = () => {
+    return selectedPractices.devices.map((device) => {
+        const responseKey = deviceKeyMap[device] || device;
+
+        return (
             <div key={device}>
-                <h2 className="practice-header">{device} Device Questions</h2>{' '}
-                {/* Bold header */}
+                <h2 className="practice-header">{device} Device Questions</h2>
                 <div>
                     <label>How many {device}s do you intend to employ?</label>
                     <CalciteInputNumber
-                        value={responses[device]?.toString() || '0'}
+                        value={responses[responseKey]?.toString() || '0'}
                         onCalciteInputNumberChange={(e) =>
-                            handleInputChange(e, device)
+                            handleInputChange(e, responseKey)
                         }
                         min={0}
                         step={1}
                     />
                 </div>
             </div>
-        ));
-    };
+        );
+    });
+};
+
 
     return (
         <div>

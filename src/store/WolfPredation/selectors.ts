@@ -55,3 +55,9 @@ export const selectQueryGeometryType = createSelector(
     (state: RootState) => state.WolfPredation.queryGeometryType,
     (queryGeometryType) => queryGeometryType
 );
+
+export const selectTotalMitigationCost = createSelector(
+    (state: RootState) => state.WolfPredation.totalMitigationCost,
+    (totalMitigationCost) => totalMitigationCost || 0
+);
+
