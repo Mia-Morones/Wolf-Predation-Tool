@@ -4,7 +4,7 @@
   "description": "Start React+Redux+@arcgis/core project with TypeScript in an easier and faster way",
   "title": "Wolf Livestock Conflict Calculator",
   "main": "index.js",
-  "homepage": "https://RezaGoljaniA.github.io/wolf-predation-app",
+  "homepage": "https://mia-morones.github.io/Wolf-Predation-Tool",
   "scripts": {
     "test": "jest --passWithNoTests",
     "start": "webpack serve --mode development --open",
@@ -23,13 +23,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/RezaGoljaniA/wolf-predation-app.git"
+    "url": "git+https://mia-morones.github.io/Wolf-Predation-Tool.git"
   },
   "keywords": [],
-  "author": "Reza Goljani Amirkhiz",
+  "author": "Mia Morones",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/RezaGoljaniA/wolf-predation-app/issues"
+    "url": "https://mia-morones.github.io/Wolf-Predation-Tool/issues"
   },
   "devDependencies": {
     "@babel/core": "7.25",
@@ -58,6 +58,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.30.1",
     "fork-ts-checker-webpack-plugin": "^9.0.2",
+    "gh-pages": "^6.3.0",
     "html-loader": "^5.1.0",
     "html-webpack-plugin": "^5.6.0",
     "husky": "^8.0.1",
@@ -87,7 +88,6 @@
     "@types/react": "^18.0.9",
     "@types/react-dom": "^18.0.5",
     "classnames": "^2.2.6",
-    "gh-pages": "^6.3.0",
     "helper-toolkit-ts": "^1.1.13",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",

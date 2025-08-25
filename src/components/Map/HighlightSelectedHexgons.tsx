@@ -90,8 +90,9 @@ export const HighlightSelectedHexgons: FC<Props> = ({ mapView }) => {
 
         (async () => {
             const hexLayers = mapView.map.layers.filter((layer) => {
-                return layer.title && layer.title.startsWith('hex');
+  return layer.title === 'Prediction Statistics';
             });
+
             // console.log('visibleLayers', hexLayers);
 
             const layerViews = (await Promise.all(
@@ -128,6 +129,14 @@ export const HighlightSelectedHexgons: FC<Props> = ({ mapView }) => {
         //     });
         // });
     }, [mapView]);
+
+    useEffect(() => {
+  if (!mapView) return;
+
+  mapView.map.layers.forEach((layer) => {
+    console.log('Layer title:', layer.title);
+  });
+}, [mapView]);
 
     return null;
 };

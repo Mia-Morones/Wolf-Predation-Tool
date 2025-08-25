@@ -20,14 +20,14 @@ export const RiskAdjustments: React.FC<RiskAdjustmentsProps> = ({
   return (
     <div className={StepperContentContainerClasses}>
       <div className="mb-6 text-base">
-        <h4 className="mb-1">Your base probability for wolf/cattle conflict is:</h4>
+        <h4 className="mb-1">Your base probability for wolf/livestock conflict is:</h4>
         <h4 className="font-bold text-red-500">
           {conflictProbability === null ? 'unknown' : `${conflictProbability}%`}
         </h4>
       </div>
 
       <p className="mb-4">
-        Every operation has its own unique characteristics, and our risk
+        Every operation has its own unique characteristics, and this risk
         probability model cannot fully account for these local effects.
         Although researchers have yet to identify the exact impact of
         local effects, we list below some of the factors that COULD

@@ -20,8 +20,7 @@ export const QuizAboutOperation = () => {
     return (
         <div className={StepperContentContainerClasses}>
             <h4 className="mb-4 text-base">
-                Please enter the estimated size for each of the following
-                livestock:
+                Please enter the following information about your livestock:
             </h4>
 
             {/* <div className="grid grid-cols-2 gap-2 px-2 mb-6 ">

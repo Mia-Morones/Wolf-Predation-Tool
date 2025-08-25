@@ -17,7 +17,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import classNames from 'classnames';
 
 import ArcGISMapView from '@arcgis/core/views/MapView';
-import WebMap from '@arcgis/core/WebMap';
+import Map from '@arcgis/core/Map';
 import TileInfo from '@arcgis/core/layers/support/TileInfo';
 import GeoJSONLayer from '@arcgis/core/layers/GeoJSONLayer';
 
@@ -39,11 +39,9 @@ const MapView: React.FC<Props> = ({
   const mapViewRef = useRef<ArcGISMapView | null>(null);
 
   const initMapView = async () => {
-    const map = new WebMap({
-      portalItem: {
-        id: webmapId,
-      },
-    });
+    const map = new Map({
+  basemap: 'topo-vector', // or 'streets', 'gray-vector' — whatever basemap you prefer
+});
 
     const view = new ArcGISMapView({
       container: mapDivRef.current as HTMLDivElement,
@@ -84,27 +82,39 @@ const MapView: React.FC<Props> = ({
           `,
         },
         renderer: {
-          type: 'simple', // @ts-ignore
-          symbol: {
-            type: 'simple-fill',
-            color: 'transparent',
-            outline: { color: 'white', width: 0.5 },
-          },
-          visualVariables: [
-            {
-              type: 'color',
-              field: 'MEAN',
-              stops: [
-                { value: 0, color: '#f2f0f7' },
-                { value: 20, color: '#dadaeb' },
-                { value: 40, color: '#bcbddc' },
-                { value: 60, color: '#9e9ac8' },
-                { value: 80, color: '#756bb1' },
-                { value: 100, color: '#54278f' },
-              ],
-            },
-          ],
-        } as any,
+  type: 'simple',
+  symbol: {
+    type: 'simple-fill',
+    color: 'rgba(84, 39, 143, 0.9)',  // Purple with 30% opacity fill
+    outline: {
+      color: 'rgba(255, 255, 255, 0.7)', // White outline with 70% opacity
+      width: 1,
+    },
+  },
+  visualVariables: [
+    {
+      type: 'color',
+      field: 'MEAN',
+      stops: [
+        { value: 0, color: '#f2f0f7' },
+        { value: 20, color: '#dadaeb' },
+        { value: 40, color: '#bcbddc' },
+        { value: 60, color: '#9e9ac8' },
+        { value: 80, color: '#756bb1' },
+        { value: 100, color: '#54278f' },
+      ],
+    },
+    {
+      type: 'opacity',
+      field: 'MEAN',
+      stops: [
+        { value: 0, opacity: 0.6 },
+        { value: 100, opacity: 0.9 },
+      ],
+    },
+  ],
+} as any,
+
       });
 
       map.add(hexLayer);

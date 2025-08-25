@@ -66,8 +66,8 @@ export const BenefitsAndResults: React.FC<BenefitsAndResultsProps> = ({ userConf
         <div className={StepperContentContainerClasses}>
             <h3 className="font-bold text-lg mb-2">Model-Estimated Conflict</h3>
             <p>Conflict Probability: <b>{(modelConflictProbability * 100).toFixed(2)}%</b></p>
-            <p>Weighted Avg. Loss/Animal: <b>${weightedAverageLossPerAnimal.toFixed(2)}</b></p>
-            <p>Potential Lost Income: <b>${modelResults.pli.toFixed(2)}</b></p>
+            <p>Weighted Avg. Loss/Animal killed: <b>${weightedAverageLossPerAnimal.toFixed(2)}</b></p>
+            <p>Potential annual loss based on probability of conflict: <b>${modelResults.pli.toFixed(2)}</b></p>
             <p>Break-Even Efficiency: <b>{modelResults.breakEvenEfficiency !== null ? (modelResults.breakEvenEfficiency * 100).toFixed(2) + '%' : 'N/A'}</b></p>
             <br />
             <p>Under the following practice subsidization levels, this is how effective your practice or combination 
@@ -85,7 +85,7 @@ export const BenefitsAndResults: React.FC<BenefitsAndResultsProps> = ({ userConf
                     <h3 className="font-bold text-lg mb-2">User-Adjusted Conflict</h3>
                     <p>Conflict Probability: <b>{(userConflictProbability * 100).toFixed(2)}%</b></p>
                     <p>Weighted Avg. Loss/Animal: <b>${weightedAverageLossPerAnimal.toFixed(2)}</b></p>
-                    <p>Potential Lost Income: <b>${userResults.pli.toFixed(2)}</b></p>
+                    <p>Potential annual loss based on probability of conflict: <b>${userResults.pli.toFixed(2)}</b></p>
                     <p>Break-Even Efficiency: <b>{userResults.breakEvenEfficiency !== null ? (userResults.breakEvenEfficiency * 100).toFixed(2) + '%' : 'N/A'}</b></p>
                      <br />
                     <p>Under the following practice subsidization levels, this is how effective your practice or combination 
@@ -96,6 +96,11 @@ export const BenefitsAndResults: React.FC<BenefitsAndResultsProps> = ({ userConf
                         <li>50% Subsidy: <b>{(userResults.subsidizedEfficiencies['50%']! * 100).toFixed(2)}%</b></li>
                         <li>100% Subsidy: <b>{(userResults.subsidizedEfficiencies['100%']! * 100).toFixed(2)}%</b></li>
                     </ul>
+                    <p>The break-even efficiency is what you need to cover expenses without a subsidy. 
+                        Practices can be less efficient when subsidized. The higher the efficiency required, 
+                        the less likely a practice will pay off. Recalculate your inputs, such as the value of a loss, 
+                        or the cost of the practice to see how it impacts required efficiency. 
+                        What does it take to break even?”</p>
                 </>
             )}
         </div>

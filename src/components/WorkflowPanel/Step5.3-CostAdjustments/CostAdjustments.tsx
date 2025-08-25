@@ -185,27 +185,31 @@ const CostAdjustment: React.FC<CostAdjustmentProps> = ({
 
     // **The handleInputChange function**
     const handleInputChange = (
-        e: CustomEvent, // CustomEvent for Calcite Input
-        key: string
-    ) => {
-        const inputElement = e.target as HTMLCalciteInputNumberElement; // Correct type casting
-        const value = parseFloat(inputElement.value); // Parse as float
+    e: CustomEvent,
+    key: string
+) => {
+    const inputElement = e.target as HTMLCalciteInputNumberElement;
+    let value = parseFloat(inputElement.value);
 
-        setAdjustedCosts((prev) => {
-            const newCosts = {
-                ...prev,
-                [key]: value,
-            };
+    // Round to two decimal places
+    value = isNaN(value) ? 0 : Math.round(value * 100) / 100;
 
-            dispatch(
-                totalMitigationCostChanged(
-                    Object.values(newCosts).reduce((total, cost) => total + cost, 0)
-                )
-            );
+    setAdjustedCosts((prev) => {
+        const newCosts = {
+            ...prev,
+            [key]: value,
+        };
 
-            return newCosts;
-        });
-    };
+        dispatch(
+            totalMitigationCostChanged(
+                Object.values(newCosts).reduce((total, cost) => total + cost, 0)
+            )
+        );
+
+        return newCosts;
+    });
+};
+
 
     return (
         <div>
@@ -230,13 +234,13 @@ const CostAdjustment: React.FC<CostAdjustmentProps> = ({
                         <div>
                             <label>
                                 Adjust cost for {key}:
-                                <CalciteInputNumber
-                                    value={adjustedCosts[key].toString()} // Ensure the value is a string
-                                    onCalciteInputNumberChange={(e) =>
-                                        handleInputChange(e, key)
-                                    }
-                                    min={0}
-                                    step={10}
+                        <CalciteInputNumber
+                           value={adjustedCosts[key].toFixed(2)} 
+                            onCalciteInputNumberChange={(e) =>
+                              handleInputChange(e, key)
+                                 }
+                                 min={0}
+                                 step={0.01} 
                                 />
                             </label>
                         </div>

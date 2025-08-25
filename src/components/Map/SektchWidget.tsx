@@ -10,6 +10,9 @@ import {
 } from '@store/WolfPredation/selectors';
 import { Polygon } from '@arcgis/core/geometry';
 import { queryRiskProbabilityByRectangle } from '@store/WolfPredation/thunks';
+import SimpleFillSymbol from '@arcgis/core/symbols/SimpleFillSymbol';
+import SimpleMarkerSymbol from '@arcgis/core/symbols/SimpleMarkerSymbol';
+import Point from '@arcgis/core/geometry/Point';
 // import { queryRiskProbability } from '@store/WolfPredation/thunks';
 // import { webMercatorToGeographic } from '@arcgis/core/geometry/support/webMercatorUtils';
 
@@ -51,9 +54,17 @@ export const SektchWidget: FC<Props> = ({ mapView }) => {
             mapView.map.add(layerRef.current);
 
             sketchViewModelRef.current = new SketchViewModel({
-                view: mapView,
-                layer: layerRef.current,
-            });
+    view: mapView,
+    layer: layerRef.current,
+    polygonSymbol: new SimpleFillSymbol({
+        color: [255, 255, 0, 0.4], // Yellow fill, 40% opacity
+        outline: {
+            color: [255, 165, 0, 1], // Orange outline
+            width: 2,
+        },
+    }),
+});
+
 
             // Once user is done drawing a rectangle on the map
             // use the rectangle to select features on the map and table
