@@ -24,7 +24,7 @@ export const AppHeader = () => {
                 </a>
             </div>
             <h5 className=" text-xl text-white">
-                Wolf Livestock Conflict Calculator
+                WolfWise Decision Aid
             </h5>
 
             <div className=" w-80 shrink-0 flex items-center justify-end text-sm">

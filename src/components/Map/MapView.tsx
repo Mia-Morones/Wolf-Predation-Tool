@@ -87,8 +87,8 @@ const MapView: React.FC<Props> = ({
     type: 'simple-fill',
     color: 'rgba(84, 39, 143, 0.9)',  // Purple with 30% opacity fill
     outline: {
-      color: 'rgba(255, 255, 255, 0.7)', // White outline with 70% opacity
-      width: 1,
+      color: 'rgba(255, 255, 255, 0.2)', // White outline with 20% opacity
+      width: 0.1,
     },
   },
   visualVariables: [
@@ -108,8 +108,8 @@ const MapView: React.FC<Props> = ({
       type: 'opacity',
       field: 'MEAN',
       stops: [
-        { value: 0, opacity: 0.6 },
-        { value: 100, opacity: 0.9 },
+        { value: 0, opacity: 0.01 },
+        { value: 100, opacity: 0.01 },
       ],
     },
   ],

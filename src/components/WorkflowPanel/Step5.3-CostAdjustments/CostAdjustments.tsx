@@ -22,7 +22,7 @@ const budgetData: BudgetData = {
     'Electrified Night Penning': { annualCost: 330.21 }, // Fixed cost of night penning
     'Range Riding': { annualCost: 300, costPerRider: 30 },
     'Carcass Composting': { annualCost: 280.64 },
-    'Livestock Guardian Dog': { annualCost: 2464.18, costPerDog: 20 },
+    'Livestock Guardian Dog': { annualCost: 2464.18, costPerDog: 2464.18 },
     'Fox Light': { annualCost: 24.78, costPerLight: 24.78 },
     'Solar Sound Alarm': { annualCost: 7.41, costPerAlarm: 7.41 },
     'Game Camera': { annualCost: 21.34, costPerCamera: 21.34 },
@@ -141,7 +141,7 @@ const CostAdjustment: React.FC<CostAdjustmentProps> = ({
                         responses.carcassesToCompost *
                         practiceData.annualCost!;
                 } else if (practice === 'Livestock Guardian Dog') {
-                    adjustedCost +=
+                    adjustedCost =
                         responses.livestockGuardianDogs *
                         practiceData.costPerDog!;
                 }

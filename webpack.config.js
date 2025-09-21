@@ -16,7 +16,7 @@ module.exports = (env, options) => {
     mode: options.mode,
     entry: path.resolve(__dirname, './src/index.tsx'),
     output: {
-      path: path.resolve(__dirname, './dist'),  // ← changed from ./docs to ./dist
+      path: path.resolve(__dirname, './dist'),
       filename: '[name].[contenthash].js',
       chunkFilename: '[name].[contenthash].js',
       clean: true,
@@ -70,15 +70,14 @@ module.exports = (env, options) => {
         chunkFilename: devMode ? '[name].css' : '[name].[contenthash].css',
       }),
       new CopyPlugin({
-  patterns: [
-    {
-      from: "public/**/*",
-      globOptions: {
-        ignore: ["**/index.html", "**/*.tif"], // <-- exclude .tif files
-      },
-    },
-  ],
-}),
+        patterns: [
+          {
+            from: "public/data", // Copy only the data folder
+            to: "data",          // Paste it directly into dist/data
+            noErrorOnMissing: true,
+          },
+        ],
+      }),
       new HtmlWebpackPlugin({
         template: './public/index.html',
         filename: 'index.html',
@@ -124,3 +123,4 @@ module.exports = (env, options) => {
     },
   };
 };
+
