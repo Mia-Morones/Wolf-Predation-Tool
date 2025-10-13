@@ -1,14 +1,17 @@
 import { Point, Polygon } from '@arcgis/core/geometry';
 import { IFeature } from '@esri/arcgis-rest-feature-service';
 
-const WOLF_LIVESTOCK_CONFLICT_RISK_SERVICE_URL =
-    'https://services1.arcgis.com/hLJbHVT9ZrDIzK0I/arcgis/rest/services/WolfAppMapHexagons_WFL1/FeatureServer/3';
+// const WOLF_LIVESTOCK_CONFLICT_RISK_SERVICE_URL =
+//     'https://services1.arcgis.com/hLJbHVT9ZrDIzK0I/arcgis/rest/services/WolfAppMapHexagons_WFL1/FeatureServer/3';
+
+// Update the service URL to point to the new service prepared by Kevin Butler.
+const WOLF_LIVESTOCK_CONFLICT_RISK_SERVICE_URL = 'https://services1.arcgis.com/hLJbHVT9ZrDIzK0I/ArcGIS/rest/services/conflict_risk_points/FeatureServer/2'
 
 enum WOLF_LIVESTOCK_CONFLICT_RISK_FIELD_NAMES {
     objectId = 'OBJECTID',
-    gridId = 'GRID_ID',
-    probability = 'mean_PROB',
-    cattleDensity = 'cattle_density ',
+    gridId = 'pointid',  //'GRID_ID',
+    probability = 'point_PROB', // 'mean_PROB',
+    // cattleDensity = 'cattle_density ',
 }
 
 type WolfLivestockConflictRiskFeature = {
