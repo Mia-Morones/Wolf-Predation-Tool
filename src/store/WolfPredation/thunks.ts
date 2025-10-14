@@ -4,6 +4,7 @@ import { queryAverageWolfLivestockConflict } from '@services/wolf-livestock-conf
 import {
     isSketchingChanged,
     queryGeomChanged,
+    queryGeometryTypeChanged,
     wolfCattleConflictProbabilityChanged,
 } from './reducer';
 import { selectQueryGeometryType } from './selectors';
@@ -34,6 +35,8 @@ export const resetQueryGeometry = () => async (dispatch: StoreDispatch) => {
     dispatch(queryGeomChanged(null));
     dispatch(isSketchingChanged(false));
     dispatch(wolfCattleConflictProbabilityChanged(0));
+
+    dispatch(queryGeometryTypeChanged('rectangle'));
 };
 
 export const queryRiskProbabilityByPoint =
@@ -82,6 +85,8 @@ export const queryRiskProbability =
                     ? 'esriGeometryPoint'
                     : 'esriGeometryPolygon'
             );
+
+            console.log('Features returned from query:', features);
 
             const probability = features[0]?.probability || 0;
 

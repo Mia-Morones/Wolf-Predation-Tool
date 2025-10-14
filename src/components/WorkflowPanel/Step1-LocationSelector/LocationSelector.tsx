@@ -5,112 +5,88 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
     selectIsSketching,
     selectQueryGeometry,
-    selectQueryGeometryType,
 } from '@store/WolfPredation/selectors';
-import classNames from 'classnames';
 import {
     isSketchingChanged,
-    QueryGeometryType,
     queryGeometryTypeChanged,
 } from '@store/WolfPredation/reducer';
-import {
-    CalciteButton,
-    CalciteTab,
-    CalciteTabNav,
-    CalciteTabs,
-    CalciteTabTitle,
-} from '@esri/calcite-components-react';
+import { CalciteButton } from '@esri/calcite-components-react';
 import { resetQueryGeometry } from '@store/WolfPredation/thunks';
+import { RootState } from '@store/configureStore'; 
 
-const QUERY_GEMO_TYPES: QueryGeometryType[] = ['point', 'rectangle'];
 
 export const LocationSelector = () => {
     const dispatch = useDispatch();
 
-    const isSeketching = useSelector(selectIsSketching);
+    const isSketching = useSelector(selectIsSketching);
     const queryGeometry = useSelector(selectQueryGeometry);
-    const queryGeometryType = useSelector(selectQueryGeometryType);
+    const queryGeometryType = useSelector(
+  (state: RootState) => state.WolfPredation.queryGeometryType
+);
 
-    const shouldDisableSketching =
-        isSeketching || queryGeometry ? true : undefined;
+    const shouldDisableSketching = isSketching || Boolean(queryGeometry);
     const shouldHideClearSelection = !queryGeometry;
 
+    // Force the geometry type to 'rectangle' on mount
     useEffect(() => {
-        dispatch(resetQueryGeometry());
-    }, [queryGeometryType]);
+        dispatch(queryGeometryTypeChanged('rectangle'));
+    }, []);
+
+    useEffect(() => {
+    // Clear any leftover geometry when component mounts
+    dispatch(resetQueryGeometry());
+}, [dispatch]);
+
+console.log("Geometry type:", queryGeometryType);
+console.log('shouldDisableSketching:', shouldDisableSketching, typeof shouldDisableSketching);
 
     return (
         <div className={StepperContentContainerClasses}>
-            <CalciteTabs>
-                <CalciteTabNav slot="title-group">
-                    {/* <CalciteTabTitle>By Point</CalciteTabTitle>
-                    <CalciteTabTitle>By Rectangle</CalciteTabTitle> */}
+            <div className="py-4">
+                <p className="mb-4">
+                    WolfWise makes estimates of a conflict for any given location. Click the button below 
+                    and then draw a rectangle on the map around your location. Draw the location larger 
+                    than your property so that you can accurately reflect risk in your region. A risk of 50% 
+                    would mean that you would expect to lose one head every other year. 100% would mean 1 
+                    head every year.  The program does not go above 100%, but if you think you might lose 2 
+                    head/year (200%), for example, you can double the value per head lost to account for that 
+                    extra loss in step 4.
+                </p>
 
-                    {QUERY_GEMO_TYPES.map((type) => (
-                        <CalciteTabTitle
-                            key={type}
-                            selected={
-                                type === queryGeometryType ? true : undefined
-                            }
-                            onClick={() => {
-                                dispatch(queryGeometryTypeChanged(type));
-                            }}
-                        >
-                            By {type}
-                        </CalciteTabTitle>
-                    ))}
-                </CalciteTabNav>
+                {/* Search widget container always visible */}
+                <div id={SEARCH_WIDGET_CONTAINER_ID} className="w-full mb-4"></div>
 
-                <CalciteTab>
-                    <div className="py-4">
-                        <p className="mb-4">
-                            Click on the map or use the address locator below to
-                            select a hexgon.
-                        </p>
+                <CalciteButton
+                    appearance="solid"
+                    kind="brand" 
+                    disabled={shouldDisableSketching}
+                    width="full"
+                      style={{
+                        opacity: shouldDisableSketching ? 0.5 : 1,
+                        cursor: shouldDisableSketching ? 'not-allowed' : 'pointer',
+                    }}
+                    onClick={() => {
+                        dispatch(isSketchingChanged(true));
+                    }}
+                >
+                    Start drawing rectangle on map
+                </CalciteButton>
 
-                        <div
-                            id={SEARCH_WIDGET_CONTAINER_ID}
-                            className="w-full"
-                        ></div>
-                    </div>
-                </CalciteTab>
-
-                <CalciteTab>
-                    <div className="mt-4">
-                        <p className="mb-4">
-                            Draw a rectangle on the map to select hexgon
-                            features. To draw a rectangle, click the button
-                            below to enable the sketching tool on the map, then
-                            click and drag on the map to draw a rectangle.
-                        </p>
-
-                        {
-                            <CalciteButton
-                                disabled={shouldDisableSketching}
-                                width="full"
-                                onClick={() => {
-                                    dispatch(isSketchingChanged(true));
-                                }}
-                            >
-                                Start drawing rectange on map
-                            </CalciteButton>
-                        }
-
-                        {shouldHideClearSelection === false && (
-                            <CalciteButton
-                                className="mt-1"
-                                width="full"
-                                iconStart="x"
-                                onClick={() => {
-                                    dispatch(resetQueryGeometry());
-                                }}
-                            >
-                                Clear rectange
-                            </CalciteButton>
-                        )}
-                    </div>
-                </CalciteTab>
-            </CalciteTabs>
+                {!shouldHideClearSelection && (
+                    <CalciteButton
+                        className="mt-2"
+                        width="full"
+                        iconStart="x"
+                        onClick={() => {
+                            dispatch(resetQueryGeometry());
+                        }}
+                    >
+                        Clear rectangle
+                    </CalciteButton>
+                )}
+            </div>
         </div>
     );
 };
+
+

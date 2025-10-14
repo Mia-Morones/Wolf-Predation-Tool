@@ -84,9 +84,9 @@ export const HighlightSelectedHexgons: FC<Props> = ({ mapView }) => {
     }, [queryGeometry]);
 
     useEffect(() => {
-        console.log('mapView', mapView.map.layers);
+         if (!mapView) return;  
 
-        if (!mapView) return;
+        console.log('mapView', mapView.map.layers);
 
         (async () => {
             const hexLayers = mapView.map.layers.filter((layer) => {

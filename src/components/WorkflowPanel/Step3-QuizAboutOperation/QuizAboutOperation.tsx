@@ -19,8 +19,12 @@ export const QuizAboutOperation = () => {
 
     return (
         <div className={StepperContentContainerClasses}>
-            <h4 className="mb-4 text-base">
+            <h4 className="mb-4 text-base text-left">
                 Please enter the following information about your livestock:
+            <br />
+            <span className="text-sm italic">
+                *Note: This information is not stored anywhere and your answers are completely anonymous.
+            </span>  
             </h4>
 
             {/* <div className="grid grid-cols-2 gap-2 px-2 mb-6 ">

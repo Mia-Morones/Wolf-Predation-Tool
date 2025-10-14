@@ -3,16 +3,17 @@ import React, { FC, useEffect, useRef } from 'react';
 import SketchViewModel from '@arcgis/core/widgets/Sketch/SketchViewModel';
 import GraphicLayer from '@arcgis/core/layers/GraphicsLayer';
 import { useDispatch, useSelector } from 'react-redux';
+import { isSketchingChanged } from '@store/WolfPredation/reducer';
+
 import {
     selectIsSketching,
     selectQueryGeometry,
     selectQueryGeometryType,
 } from '@store/WolfPredation/selectors';
-import { Polygon } from '@arcgis/core/geometry';
+import { Polygon, Point } from '@arcgis/core/geometry';
 import { queryRiskProbabilityByRectangle } from '@store/WolfPredation/thunks';
 import SimpleFillSymbol from '@arcgis/core/symbols/SimpleFillSymbol';
 import SimpleMarkerSymbol from '@arcgis/core/symbols/SimpleMarkerSymbol';
-import Point from '@arcgis/core/geometry/Point';
 import { ThunkDispatch } from 'redux-thunk';
 import { RootState } from '@store/rootReducer';
 import { AnyAction } from 'redux';
@@ -22,11 +23,11 @@ type Props = {
 };
 
 export const SektchWidget: FC<Props> = ({ mapView }) => {
-    // Type dispatch as ThunkDispatch
     const dispatch: ThunkDispatch<RootState, unknown, AnyAction> = useDispatch();
 
     const isSeketching = useSelector(selectIsSketching);
     const queryGeometry = useSelector(selectQueryGeometry);
+    const queryGeometryType = useSelector(selectQueryGeometryType);
 
     const layerRef = useRef<GraphicLayer>();
     const sketchViewModelRef = useRef<SketchViewModel>();
@@ -46,38 +47,61 @@ export const SektchWidget: FC<Props> = ({ mapView }) => {
                         width: 2,
                     },
                 }),
+                pointSymbol: new SimpleMarkerSymbol({
+                    style: 'circle',
+                    color: 'red',
+                    size: '12px',
+                    outline: { color: 'white', width: 2 },
+                }),
             });
 
-            // Once user is done drawing a rectangle on the map
+            // When drawing is completed
             sketchViewModelRef.current.on('create', async (event) => {
                 if (event.state === 'complete') {
-                    dispatch(
-                        queryRiskProbabilityByRectangle(
-                            event.graphic.geometry as Polygon
-                        )
-                    );
+                    if (queryGeometryType === 'rectangle') {
+                        dispatch(
+                            queryRiskProbabilityByRectangle(
+                                event.graphic.geometry as Polygon
+                            )
+                        );
+
+                    dispatch(isSketchingChanged(false));
+                    } else if (queryGeometryType === 'point') {
+                        // Handle point case if needed
+                        // dispatch(queryRiskProbabilityByPoint(event.graphic.geometry as Point));
+                    }
                 }
             });
 
+            // When updating is completed
             sketchViewModelRef.current.on('update', async (event) => {
                 if (event.state === 'complete') {
-                    dispatch(
-                        queryRiskProbabilityByRectangle(
-                            event.graphics[0].geometry as Polygon
-                        )
-                    );
+                    if (queryGeometryType === 'rectangle') {
+                        dispatch(
+                            queryRiskProbabilityByRectangle(
+                                event.graphics[0].geometry as Polygon
+                            )
+                        );
+                    } else if (queryGeometryType === 'point') {
+                        // Handle point case if needed
+                    }
                 }
             });
         }
-    }, [mapView, dispatch]); // Added dispatch as dependency
+    }, [mapView, dispatch, queryGeometryType]);
 
     useEffect(() => {
         if (!sketchViewModelRef.current || !isSeketching) {
             return;
         }
 
-        sketchViewModelRef.current.create('rectangle');
-    }, [isSeketching]);
+        // Create the shape depending on the current queryGeometryType
+        if (queryGeometryType === 'rectangle') {
+            sketchViewModelRef.current.create('rectangle');
+        } else if (queryGeometryType === 'point') {
+            sketchViewModelRef.current.create('point');
+        }
+    }, [isSeketching, queryGeometryType]);
 
     useEffect(() => {
         if (!sketchViewModelRef.current || !layerRef.current || queryGeometry) {
@@ -89,4 +113,9 @@ export const SektchWidget: FC<Props> = ({ mapView }) => {
 
     return null;
 };
+
+
+
+
+
 

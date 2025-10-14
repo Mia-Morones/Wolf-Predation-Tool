@@ -28,6 +28,11 @@ const budgetData: BudgetData = {
     'Game Camera': { annualCost: 21.34, costPerCamera: 21.34 },
 };
 
+const displayNameMap: { [key: string]: string } = {
+    'Carcass Composting': 'Carcass Management',
+    // Add more if needed in the future
+};
+
 type CostAdjustmentProps = {
     selectedPractices: {
         practices: string[];
@@ -221,31 +226,31 @@ const CostAdjustment: React.FC<CostAdjustmentProps> = ({
             </p>
 
             <div>
-                {Object.keys(adjustedCosts).map((key) => (
-                    <div
-                        key={key}
-                        className="cost-item"
-                        style={{ marginBottom: '30px' }}
-                    >
-                        <div>
-                            <strong>{key}</strong>: $
-                            {adjustedCosts[key].toFixed(2)}
-                        </div>
-                        <div>
-                            <label>
-                                Adjust cost for {key}:
-                        <CalciteInputNumber
-                           value={adjustedCosts[key].toFixed(2)} 
-                            onCalciteInputNumberChange={(e) =>
-                              handleInputChange(e, key)
-                                 }
-                                 min={0}
-                                 step={0.01} 
-                                />
-                            </label>
-                        </div>
-                    </div>
-                ))}
+                {Object.keys(adjustedCosts).map((key) => {
+    const displayLabel = displayNameMap[key] || key;
+
+    return (
+        <div key={key} className="cost-item" style={{ marginBottom: '30px' }}>
+            <div>
+                <strong>{displayLabel}</strong>: ${adjustedCosts[key].toFixed(2)}
+            </div>
+            <div>
+                <label>
+                    Adjust cost for {displayLabel}:
+                    <CalciteInputNumber
+                        value={adjustedCosts[key].toFixed(2)} 
+                        onCalciteInputNumberChange={(e) =>
+                            handleInputChange(e, key)
+                        }
+                        min={0}
+                        step={0.01} 
+                    />
+                </label>
+            </div>
+        </div>
+    );
+})}
+
             </div>
 
             <div>

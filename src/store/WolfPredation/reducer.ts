@@ -19,10 +19,10 @@ export enum Livestock {
 
 export const LIVESTOCKS: Livestock[] = [
     Livestock.Calves,
-    Livestock.Lambs,
     Livestock.Yearlings,
-    Livestock.Ewes,
     Livestock.Cows,
+    Livestock.Ewes,
+    Livestock.Lambs,
     Livestock.Rams,
 ];
 

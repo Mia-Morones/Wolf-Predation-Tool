@@ -7,13 +7,14 @@ export const AboutPage = () => {
             <AppHeader />
 
             <div className=" container my-12">
-                This tool provides information about the economic feasibility of
-                non-lethal wolf conflict reduction practices and devices, and it
-                is tailored to an individual livestock property. You can
-                estimate the probability of wolf conflict and estimate expected
-                costs of livestock loss as compared to the cost of mitigation.
-                Note: Analysis from this decision tool are estimates and may
-                vary from actual conditions.
+                This website provides livestock producers with an easy-to-use tool to evaluate 
+                the economic costs of using conflict reduction practices specifically tailored 
+                to the location of a livestock operation and how likely wolf losses might be. 
+                WolfWise estimates the probability and value of losing livestock to wolves and 
+                compares it to the costs of using prevention tools. The program provides 
+                estimates based on conflict data and a prevention cost report from 2025 and can be 
+                overwritten to experiment with a user’s personal experiences about a location 
+                or operation.  
             </div>
         </div>
     );

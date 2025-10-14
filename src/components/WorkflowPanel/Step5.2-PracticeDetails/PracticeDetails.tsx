@@ -262,34 +262,29 @@ const PracticeDetails: FC<PracticeDetailsProps> = ({
                 );
 
             case 'Carcass Composting':
-                return (
-                    <div>
-                        <h2 className="practice-header">
-                            Carcass Composting Questions{' '}
-                        </h2>
-                        <div>
-                            <label>
-                                How many carcasses are you planning on
-                                composting?
-                                <CalciteInputNumber
-                                    value={
-                                        responses[
-                                            'carcassesToCompost'
-                                        ]?.toString() || '0'
-                                    }
-                                    onCalciteInputNumberChange={(e) =>
-                                        handleInputChange(
-                                            e,
-                                            'carcassesToCompost'
-                                        )
-                                    }
-                                    min={0}
-                                    step={1}
-                                />
-                            </label>
-                        </div>
-                    </div>
-                );
+    return (
+        <div>
+            <h2 className="practice-header">
+                Carcass Management Questions
+            </h2>
+            <div>
+                <label>
+                    How many carcasses are you planning to compost/remove?
+                    <CalciteInputNumber
+                        value={
+                            responses['carcassesToCompost']?.toString() || '0'
+                        }
+                        onCalciteInputNumberChange={(e) =>
+                            handleInputChange(e, 'carcassesToCompost')
+                        }
+                        min={0}
+                        step={1}
+                    />
+                </label>
+            </div>
+        </div>
+    );
+
 
             // Render questions specific to Range Riding practice
             case 'Range Riding':

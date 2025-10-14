@@ -77,19 +77,27 @@ export const ValueOfDamage = () => {
     return (
         <div className={StepperContentContainerClasses}>
             <p className="mb-4">
-                We recognize that value of your livestock varies by operation.
-                In addition, the cost to handle livestock killed by wolves
-                varies from one producer to the next.
+                WolfWise recognizes that the value of livestock varies by operation. 
+                In addition, the cost to handle livestock killed by wolves varies 
+                from one producer to the next.
             </p>
 
             <p className="mb-6">
-                We apply a formula to compute a weighted average for one animal
-                being killed based your answers below. Tell us, for cattle only
-                or sheep only, if one of the following were to be killed by a
-                wolf/wolves, how much lost income including costs associated
-                with carcass removal/handling would be incurred. Indicate the
-                market value you lost and the costs to handle the carcass and
-                file for assistance if pursued.
+                The program applies a formula to compute a weighted average for one 
+                animal being killed based your answers on the previous screen and those 
+                below. For cattle only or sheep only, how much income would you lose 
+                by not being able to sell each type of livestock. What is its value? 
+                Also, indicate the costs associated with carcass removal/handling. This 
+                could include time, fees, and transportation.
+            </p>
+
+            <p className="mb-6">
+                You may inflate the value of an animal to include other values if you like. 
+                For example, if an animal lost would be worth $2,000, you might value it at 
+                $4,000 to account for multiple deaths in a single year, or to account for 
+                indirect losses such as reduced pregnancy rates, herd weight loss, or animals 
+                not found. You can also account for these other losses in the carcass 
+                removal/handling box.
             </p>
 
             <div

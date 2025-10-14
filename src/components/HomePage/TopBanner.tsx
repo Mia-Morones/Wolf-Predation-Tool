@@ -15,34 +15,41 @@ export const TopBanner = () => {
                 backgroundSize: 'cover',
             }}
         >
-            <div className=" absolute top-0 left-0 w-full h-full bg-black opacity-20"></div>
+            <div className="absolute top-0 left-0 w-full h-full bg-black opacity-20"></div>
 
             <div className="container pt-8 pb-12 relative">
-                <div className="text-center max-w-xl mx-auto mb-8">
+                <div className="text-center max-w-xl mx-auto mb-6">
                     <h1 className="text-4xl text-shadow text-white font-medium ">
-                        Explore and calculate relative risk, impacts of
-                        mitigation, and potential losses.
+                        Ranching in Wolf Country
+                        <br />
+                        WolfWise Risk-Cost Calculator
                     </h1>
                 </div>
 
-                <div className="max-w-[990px] text-center mx-auto text-shadow text-white my-16 text-xl">
-                    <p className="mb-8">
-                        This tool provides information about the economic
-                        feasibility of non-lethal wolf conflict reduction
-                        practices and devices, and it is tailored to an
-                        individual livestock property. You can estimate the
-                        probability of wolf conflict and estimate expected costs
-                        of livestock loss as compared to the cost of mitigation.
-                    </p>
+                <div className="max-w-[990px] mx-auto text-shadow text-white text-xl text-center my-8">
+  <ul className="list-disc list-inside inline-block text-left my-4 space-y-1">
+    <li>How likely is it that your livestock might be killed by wolves?</li>
+    <li>How much does it cost to prevent losses?</li>
+    <li>How effective do prevention tools need to be to cover their costs?</li>
+  </ul>
+</div>
 
-                    <p>
-                        Note: Analysis from this decision tool are estimates and
-                        may vary from actual conditions.
-                    </p>
-                </div>
+               <div className="max-w-5xl text-center mx-auto text-shadow text-white my-8 text-base">
+  <p className="mb-4">
+    This website provides livestock producers with an easy-to-use tool to evaluate the economic costs of using conflict 
+    reduction practices specifically tailored to the location of a livestock operation and how likely wolf losses might 
+    be. WolfWise estimates the probability and value of losing livestock to wolves and compares it to the costs of using 
+    prevention tools. The program provides estimates based on conflict data and a prevention cost report from 2025 and 
+    can be overwritten to experiment with a user’s personal experiences about a location or operation.  
+  </p>
+
+  <p>
+    <strong>Note:</strong> Analysis from this decision tool are estimates and may vary from actual conditions. No information you enter is collected or shared.
+  </p>
+</div>
 
                 <div className="mt-16 flex items-center justify-center">
-                    <div className="">
+                    <div>
                         <Link to={PATH_CALCULATOR_PAGE}>
                             <CalciteButton
                                 width="full"
@@ -60,3 +67,4 @@ export const TopBanner = () => {
         </div>
     );
 };
+

@@ -59,53 +59,79 @@ export const BenefitsAndResults: React.FC<BenefitsAndResultsProps> = ({ userConf
 
     const modelResults = calculateMetrics(modelConflictProbability);
     const userResults = userConflictProbability !== null
-    ? calculateMetrics(userConflictProbability) // already decimal
-    : null;
+        ? calculateMetrics(userConflictProbability)
+        : null;
 
     return (
         <div className={StepperContentContainerClasses}>
-            <h3 className="font-bold text-lg mb-2">Model-Estimated Conflict</h3>
-            <p>Conflict Probability: <b>{(modelConflictProbability * 100).toFixed(2)}%</b></p>
-            <p>Weighted Avg. Loss/Animal killed: <b>${weightedAverageLossPerAnimal.toFixed(2)}</b></p>
-            <p>Potential annual loss based on probability of conflict: <b>${modelResults.pli.toFixed(2)}</b></p>
-            <p>Break-Even Efficiency: <b>{modelResults.breakEvenEfficiency !== null ? (modelResults.breakEvenEfficiency * 100).toFixed(2) + '%' : 'N/A'}</b></p>
-            <br />
-            <p>Under the following practice subsidization levels, this is how effective your practice or combination 
-                of practices would need to be in order to offset your costs:
+            <p className="mb-4">
+                Using information from the model and what you entered, <strong>WolfWise</strong> estimates 
+                how much a practice would need to reduce risk for the cost of the practice to be covered 
+                by the losses the practice prevents. We call this <strong>“breakeven efficacy”</strong>. 
+                For example, if your risk was 40%, and your “breakeven efficacy” was 50%, then the practice 
+                must reduce risk from 40% to 20% or less. If the practice reduces your risk by 50% or more, 
+                the practice offsets at least as much loss as it costs. If you are unsure how much the practice 
+                reduces risk, find break even, then ask yourself if you think it is more or less effective 
+                than break even.
             </p>
-            <ul>
-                <li>25% Subsidy: <b>{(modelResults.subsidizedEfficiencies['25%']! * 100).toFixed(2)}%</b></li>
-                <li>50% Subsidy: <b>{(modelResults.subsidizedEfficiencies['50%']! * 100).toFixed(2)}%</b></li>
-                <li>100% Subsidy: <b>{(modelResults.subsidizedEfficiencies['100%']! * 100).toFixed(2)}%</b></li>
+
+            <h3 className="font-bold text-lg mb-2">Model-Estimated Conflict</h3>
+            <p><b>{(modelConflictProbability * 100).toFixed(2)}%</b> – Probability of losing one animal to predation</p>
+            <p><b>${weightedAverageLossPerAnimal.toFixed(2)}</b> – Value of lost animal (weighted average across the herd)</p>
+            <p><b>${modelResults.pli.toFixed(2)}</b> – Potential loss based on probability and value</p>
+
+            <p className="mt-4 font-semibold">Minimum required practice efficacy to Break Even with cost</p>
+            <p>
+                <b>{modelResults.breakEvenEfficiency !== null ? (modelResults.breakEvenEfficiency * 100).toFixed(0) + '%' : 'N/A'}</b> – Minimum required reduction in risk. Reduction required<br />
+                for reduced potential losses to outweigh cost of practice.
+            </p>
+
+            {modelResults.breakEvenEfficiency === 1 && (
+                <p className="mt-2 font-semibold">
+                    If Break Even is 100%, practice cannot prevent more loss than it costs.
+                </p>
+            )}
+
+            <p className="mt-4 font-semibold">Minimum required practice efficacy with practice cost share:</p>
+            <ul className="list-none pl-0">
+                <li><b>{(modelResults.subsidizedEfficiencies['25%']! * 100).toFixed(0)}%</b> – Cost share covers 25% of practice cost</li>
+                <li><b>{(modelResults.subsidizedEfficiencies['50%']! * 100).toFixed(0)}%</b> – Cost share covers 50% of practice cost</li>
+                <li><b>{(modelResults.subsidizedEfficiencies['100%']! * 100).toFixed(0)}%</b> – Practice is always cost effective with 100% cost share.</li>
             </ul>
 
             {userResults && (
                 <>
                     <hr className="my-4" />
                     <h3 className="font-bold text-lg mb-2">User-Adjusted Conflict</h3>
-                    <p>Conflict Probability: <b>{(userConflictProbability * 100).toFixed(2)}%</b></p>
-                    <p>Weighted Avg. Loss/Animal: <b>${weightedAverageLossPerAnimal.toFixed(2)}</b></p>
-                    <p>Potential annual loss based on probability of conflict: <b>${userResults.pli.toFixed(2)}</b></p>
-                    <p>Break-Even Efficiency: <b>{userResults.breakEvenEfficiency !== null ? (userResults.breakEvenEfficiency * 100).toFixed(2) + '%' : 'N/A'}</b></p>
-                     <br />
-                    <p>Under the following practice subsidization levels, this is how effective your practice or combination 
-                         of practices would need to be in order to offset your costs:
+                    <p><b>{(userConflictProbability * 100).toFixed(2)}%</b> – Probability of losing one animal to predation</p>
+                    <p><b>${weightedAverageLossPerAnimal.toFixed(2)}</b> – Value of lost animal (weighted average across the herd)</p>
+                    <p><b>${userResults.pli.toFixed(2)}</b> – Potential loss based on probability and value</p>
+
+                    <p className="mt-4 font-semibold">Minimum required practice efficacy to Break Even with cost</p>
+                    <p>
+                        <b>{userResults.breakEvenEfficiency !== null ? (userResults.breakEvenEfficiency * 100).toFixed(0) + '%' : 'N/A'}</b> – Minimum required reduction in risk. Reduction required<br />
+                        for reduced potential losses to outweigh cost of practice.
                     </p>
-                    <ul>
-                        <li>25% Subsidy: <b>{(userResults.subsidizedEfficiencies['25%']! * 100).toFixed(2)}%</b></li>
-                        <li>50% Subsidy: <b>{(userResults.subsidizedEfficiencies['50%']! * 100).toFixed(2)}%</b></li>
-                        <li>100% Subsidy: <b>{(userResults.subsidizedEfficiencies['100%']! * 100).toFixed(2)}%</b></li>
+
+                    {userResults.breakEvenEfficiency === 1 && (
+                        <p className="mt-2 font-semibold">
+                            If Break Even is 100%, practice cannot prevent more loss than it costs.
+                        </p>
+                    )}
+
+                    <p className="mt-4 font-semibold">Minimum required practice efficacy with practice cost share:</p>
+                    <ul className="list-none pl-0">
+                        <li><b>{(userResults.subsidizedEfficiencies['25%']! * 100).toFixed(0)}%</b> – Cost share covers 25% of practice cost</li>
+                        <li><b>{(userResults.subsidizedEfficiencies['50%']! * 100).toFixed(0)}%</b> – Cost share covers 50% of practice cost</li>
+                        <li><b>{(userResults.subsidizedEfficiencies['100%']! * 100).toFixed(0)}%</b> – Practice is always cost effective with 100% cost share.</li>
                     </ul>
-                    <p>The break-even efficiency is what you need to cover expenses without a subsidy. 
-                        Practices can be less efficient when subsidized. The higher the efficiency required, 
-                        the less likely a practice will pay off. Recalculate your inputs, such as the value of a loss, 
-                        or the cost of the practice to see how it impacts required efficiency. 
-                        What does it take to break even?”</p>
                 </>
             )}
         </div>
     );
 };
+
+
 
 
 

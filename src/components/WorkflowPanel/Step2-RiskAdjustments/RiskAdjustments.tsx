@@ -27,19 +27,22 @@ export const RiskAdjustments: React.FC<RiskAdjustmentsProps> = ({
       </div>
 
       <p className="mb-4">
-        Every operation has its own unique characteristics, and this risk
-        probability model cannot fully account for these local effects.
-        Although researchers have yet to identify the exact impact of
-        local effects, we list below some of the factors that COULD
-        increase your chances of realizing a conflict so that you can
-        override our estimates if you choose. We will show you results
-        based on our estimate and yours.
+        Every operation has its own unique characteristics, and this
+        program cannot fully account for these local differences. Although 
+        researchers have yet to identify the exact impact of local effects, 
+        we list below some of the factors that COULD increase your chances 
+        of realizing a conflict. You can override the program estimates if 
+        you choose. Since it is difficult to know how much risk there really is, 
+        try different amounts and see how it affects the economic feasibility 
+        of prevention on your operation. We will show you results based on 
+        both the program estimate and your own.
       </p>
 
       <ul className="list-disc list-inside mb-6">
         <li>A known wolf pack has established hunting grounds in your area</li>
         <li>There has been evidence (tracks, scat, etc.) of a wolf/wolf pack within your area this season or the season prior</li>
         <li>There have been instances of wolf/cattle conflict or predation near you in this season or prior</li>
+        <li>The size of nearby packs is becoming larger, and/or have many pups to feed</li>
       </ul>
 
       <label className="block mb-2 font-medium">

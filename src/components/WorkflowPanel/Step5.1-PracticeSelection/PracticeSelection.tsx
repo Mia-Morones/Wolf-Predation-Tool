@@ -12,17 +12,18 @@ const PracticeSelection: React.FC<PracticeSelectionProps> = ({
     handleSelectionChange,
 }) => {
     const [selectedPractices, setSelectedPractices] = useState<string[]>([]);
-    const [selectedDevices, setSelectedDevices] = useState<string[]>([]);
+    //const [selectedDevices, setSelectedDevices] = useState<string[]>([]);
 
     const practices = [
-        'Turbo Fladry',
-        'Electrified Night Penning',
-        'Range Riding',
-        'Carcass Composting',
-        'Livestock Guardian Dog',
-    ];
+    { id: 'Turbo Fladry', label: 'Turbo Fladry' },
+    { id: 'Electrified Night Penning', label: 'Electrified Night Penning' },
+    { id: 'Range Riding', label: 'Range Riding' },
+    { id: 'Carcass Composting', label: 'Carcass Management' }, // 👈 This is the key change
+    { id: 'Livestock Guardian Dog', label: 'Livestock Guardian Dog' },
+];
 
-    const devices = ['Fox Light', 'Solar Sound Alarm', 'Game Camera'];
+
+    //const devices = ['Fox Light', 'Solar Sound Alarm', 'Game Camera'];
 
     const handlePracticeChange = (practice: string, checked: boolean) => {
         setSelectedPractices((prev) => {
@@ -34,6 +35,7 @@ const PracticeSelection: React.FC<PracticeSelectionProps> = ({
         });
     };
 
+    /*
     const handleDeviceChange = (device: string, checked: boolean) => {
         setSelectedDevices((prev) => {
             const newDevices = checked
@@ -43,11 +45,12 @@ const PracticeSelection: React.FC<PracticeSelectionProps> = ({
             return newDevices;
         });
     };
+    */
 
     return (
         <div className="selection-container">
             <h3>
-                Pick any or all practices and devices that you are interested in
+                Pick any or all practices that you are interested in
                 exploring.
             </h3>
 
@@ -55,28 +58,23 @@ const PracticeSelection: React.FC<PracticeSelectionProps> = ({
                 <div className="category">
                     <h4>Practices</h4>
                     <div className="options">
-                        {practices.map((practice) => (
-                            <div key={practice} className="option-item">
-                                <label>
-                                    <input
-                                        type="checkbox"
-                                        checked={selectedPractices.includes(
-                                            practice
-                                        )}
-                                        onChange={(e) =>
-                                            handlePracticeChange(
-                                                practice,
-                                                e.target.checked
-                                            )
-                                        }
-                                    />
-                                    {practice}
-                                </label>
-                            </div>
-                        ))}
+                        {practices.map(({ id, label }) => (
+    <div key={id} className="option-item">
+        <label>
+            <input
+                type="checkbox"
+                checked={selectedPractices.includes(id)}
+                onChange={(e) => handlePracticeChange(id, e.target.checked)}
+            />
+            {label}
+        </label>
+    </div>
+))}
+
                     </div>
                 </div>
 
+                {/* 
                 <div className="category">
                     <h4>Devices</h4>
                     <div className="options">
@@ -101,6 +99,7 @@ const PracticeSelection: React.FC<PracticeSelectionProps> = ({
                         ))}
                     </div>
                 </div>
+                */}
             </div>
         </div>
     );
